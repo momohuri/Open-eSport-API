@@ -8,7 +8,7 @@ var server = new Server('bcj5rjbogbt0g2k8.mongo.clvrcld.net', 27017, {auto_recon
 db = new Db('bcj5rjbogbt0g2k8', server);
  
 db.open(function(err, db) {
-	client.authenticate('uer54jv7ti46gfj8', '1e033c93a03c4b9f94447eb7122a88ea', function(err, success) {
+	db.authenticate('uer54jv7ti46gfj8', '1e033c93a03c4b9f94447eb7122a88ea', function(err, success) {
 	    if(!err) {
 	        console.log("Connected to 'openesport' database");
 	        db.collection('articles', {strict:true}, function(err, collection) {
