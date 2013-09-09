@@ -18,7 +18,7 @@ db.open(function(err, db) {
 	            }
 	        });
 	    }
-	}
+	});
 });
 
 exports.db = db;
