@@ -20,7 +20,7 @@ app.get('/website/:website', api.findByWebsite);
 app.get('/game/:game', api.findByGame);
 app.get('/duo/:website/:game', api.findByWebsiteAndGame);
 
-app.listen(3000);
+app.listen();
 
 
 //CRON
