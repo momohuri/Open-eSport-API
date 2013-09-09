@@ -11,12 +11,6 @@ db.open(function(err, client) {
 	client.authenticate('uer54jv7ti46gfj8', '1e033c93a03c4b9f94447eb7122a88ea', function(err, success) {
 	    if(!err) {
 	        console.log("Connected to 'openesport' database");
-	        db.collection('articles', {strict:true}, function(err, collection) {
-	            if (err) {
-	                console.log("The 'articles' collection doesn't exist. Creating it with sample data...");
-	                populateDB();
-	            }
-	        });
 	    }
 	});
 });
