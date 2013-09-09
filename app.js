@@ -24,26 +24,26 @@ app.listen(8080);
 
 
 //CRON
-var cronJob = require('cron').CronJob;
-new cronJob('0 */5 * * * *', function(){
-	console.log('Hi Cron');
+//var cronJob = require('cron').CronJob;
+// new cronJob('0 */15 * * * *', function(){
+// 	console.log('Hi Cron');
 
-	getRssFeed("eSportsFrance", "esfr", "http://www.esportsfrance.com/rss/esports.rss", "fr", null);
-	getRssFeed("O'Gaming", "ogaming", "http://www.ogaming.tv/rss.xml", "fr", null);
-	getRssFeed("Team aAa", "teamaaa", "http://www.team-aaa.com/xml/news-rss-all.xml", "fr", null);
-	getRssFeed("TeamLiquid", "tl", "http://www.teamliquid.net/rss/news.xml", "en", null);
-	getRssFeed("VaKarM", "vakarm", "http://feeds2.feedburner.com/vakarm", "fr", "csgo");
-	getRssFeed("HLTV", "hltv", "http://www.hltv.org/news.rss.php", "en", "csgo");
-	getRssFeed("Cadred", "cadred", "http://www.cadred.org/Rss/?type=news", "en", null);
-	getRssFeed("IEWT", "iewt", "http://www.inesportwetrust.com/feed", "fr", null);
-	getRssFeed("Reddit", "reddit", "http://www.reddit.com/r/starcraft/.rss", "en", "sc2");
-	getRssFeed("Reddit", "reddit", "http://www.reddit.com/r/dota2/.rss", "en", "dota2");
-	getRssFeed("Reddit", "reddit", "http://www.reddit.com/r/leagueoflegends/.rss", "en", "lol");
-	getRssFeed("Millenium", "millenium", "http://www.millenium.org/index.php?siteUrl=starcraft-2&themeUrl=accueil&module=actualite&action=actualite:rss", "fr", "sc2");
-	getRssFeed("Millenium", "millenium", "http://www.millenium.org/index.php?siteUrl=dota-2&themeUrl=accueil&module=actualite&action=actualite:rss", "fr", "dota2");
-	getRssFeed("Millenium", "millenium", "http://www.millenium.org/index.php?siteUrl=lol&themeUrl=accueil&module=actualite&action=actualite:rss", "fr", "lol");
-	getRssFeed("Millenium", "millenium", "http://www.millenium.org/index.php?siteUrl=cs-go&themeUrl=accueil&module=actualite&action=actualite:rss", "fr", "csgo");
-}, null, true);
+// 	getRssFeed("eSportsFrance", "esfr", "http://www.esportsfrance.com/rss/esports.rss", "fr", null);
+// 	getRssFeed("O'Gaming", "ogaming", "http://www.ogaming.tv/rss.xml", "fr", null);
+// 	getRssFeed("Team aAa", "teamaaa", "http://www.team-aaa.com/xml/news-rss-all.xml", "fr", null);
+// 	getRssFeed("TeamLiquid", "tl", "http://www.teamliquid.net/rss/news.xml", "en", null);
+// 	getRssFeed("VaKarM", "vakarm", "http://feeds2.feedburner.com/vakarm", "fr", "csgo");
+// 	getRssFeed("HLTV", "hltv", "http://www.hltv.org/news.rss.php", "en", "csgo");
+// 	getRssFeed("Cadred", "cadred", "http://www.cadred.org/Rss/?type=news", "en", null);
+// 	getRssFeed("IEWT", "iewt", "http://www.inesportwetrust.com/feed", "fr", null);
+// 	getRssFeed("Reddit", "reddit", "http://www.reddit.com/r/starcraft/.rss", "en", "sc2");
+// 	getRssFeed("Reddit", "reddit", "http://www.reddit.com/r/dota2/.rss", "en", "dota2");
+// 	getRssFeed("Reddit", "reddit", "http://www.reddit.com/r/leagueoflegends/.rss", "en", "lol");
+// 	getRssFeed("Millenium", "millenium", "http://www.millenium.org/index.php?siteUrl=starcraft-2&themeUrl=accueil&module=actualite&action=actualite:rss", "fr", "sc2");
+// 	getRssFeed("Millenium", "millenium", "http://www.millenium.org/index.php?siteUrl=dota-2&themeUrl=accueil&module=actualite&action=actualite:rss", "fr", "dota2");
+// 	getRssFeed("Millenium", "millenium", "http://www.millenium.org/index.php?siteUrl=lol&themeUrl=accueil&module=actualite&action=actualite:rss", "fr", "lol");
+// 	getRssFeed("Millenium", "millenium", "http://www.millenium.org/index.php?siteUrl=cs-go&themeUrl=accueil&module=actualite&action=actualite:rss", "fr", "csgo");
+// }, null, true);
 
 
 
