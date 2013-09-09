@@ -125,11 +125,8 @@ function generateArticle(article, website, websiteShort, language, game){
 				language: 		language,
 				titleDate: 		articleTitleDate
 			});
-
-			console.log("website: " + website + ", title: " + article.title);
 		}
 		else if(articleFound) {
-			console.log("already in DB");
 		}
 	});
 	
