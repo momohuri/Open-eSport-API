@@ -3,9 +3,7 @@
 	"version": "0.1.0-12",
 	"author": "Antoine Riviere <antoine@riviere.tf>",
 	"description": "an esport's website RSS parser",
-	"scripts": {
-		"start": "node app.js"
-	},
+	"web": "node app.js"
 	"private": true,
 	"dependencies": {
 		"cron": "1.0.1",
