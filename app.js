@@ -28,7 +28,10 @@ app.get('/duo/:website/:game', api.findByWebsiteAndGame);
 app.get('/remove/all', api.removeAll);
 console.log("7bonjour!");
 
-app.listen();
+var port = process.env.PORT || 5000;
+app.listen(port, function() {
+  console.log("Listening on " + port);
+});
 console.log("8bonjour!");
 
 // var Iconv = require('iconv').Iconv;
@@ -36,7 +39,7 @@ console.log("8bonjour!");
 
 //CRON
 var cronJob = require('cron').CronJob;
-new cronJob('* */4 * * * *', function(){
+new cronJob('0 */4 * * * *', function(){
 	console.log('Hi Cron');
 
 	getRssFeed("eSportsFrance", "esfr", "http://www.esportsfrance.com/rss/esports.rss", "fr", null);
