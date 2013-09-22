@@ -1,26 +1,26 @@
 module.exports = {
 	
 	setCategories: function(cat){
-		var categories = [];
+		var category;
 
 		if((cat.toString().toLowerCase().indexOf("starcraft") > -1) || (cat.toString().toLowerCase().indexOf("sc2") > -1))
-			categories.push("sc2");
+			category = "sc2";
 		if((cat.toString().toLowerCase().indexOf("dota2") > -1) || (cat.toString().toLowerCase().indexOf("defense of the ancients") > -1))
-			categories.push("dota2");
+			category = "dota2";
 		if((cat.toString().toLowerCase().indexOf("lol") > -1) || (cat.toString().toLowerCase().indexOf("league of legends") > -1))
-			categories.push("lol");
+			category = "lol";
 		if((cat.toString().toLowerCase().indexOf("tf2") > -1))
-			categories.push("tf2");
+			category = "tf2";
 		if((cat.toString().toLowerCase().indexOf("csgo") > -1) || (cat.toString().toLowerCase().indexOf("counter-strike") > -1))
-			categories.push("csgo");
+			category = "csgo";
 		if((cat.toString().toLowerCase().indexOf("sm") > -1))
-			categories.push("sm");
+			category = "sm";
 		if((cat.toString().toLowerCase().indexOf("ql") > -1))
-			categories.push("ql");
+			category = "ql";
 		if((cat.toString().toLowerCase().indexOf("sf4") > -1) || (cat.toString().toLowerCase().indexOf("street fighter") > -1) || 
 			(cat.toString().toLowerCase().indexOf("baston") > -1))
-			categories.push("sf4");
+			category = "sf4";
 
-		return categories;
+		return category;
 	}	
 };

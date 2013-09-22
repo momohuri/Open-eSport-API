@@ -26,3 +26,8 @@ exports.findByWebsiteAndGame = function(req, res) {
 		if(!err) res.send(articles);
 	});
 };
+
+exports.removeAll = function(req, res) {
+	db.collection('articles').remove();
+	res.send(200);
+};
