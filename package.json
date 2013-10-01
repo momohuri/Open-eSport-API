@@ -1,6 +1,6 @@
 {
 	"name": "open-esport",
-	"version": "0.1.0-12",
+	"version": "0.1.0-25",
 	"author": "Antoine Riviere <antoine@riviere.tf>",
 	"description": "an esport's website RSS parser",
 	"scripts": {
@@ -9,6 +9,7 @@
 	"private": true,
 	"dependencies": {
 		"cron": "1.0.1",
+		"iconv": "2.0.7",
 		"express": "3.4.0",
 		"feedparser": "0.15.3",
 		"moment": "2.1.0",
