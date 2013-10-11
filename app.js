@@ -32,7 +32,7 @@ var iconv = new Iconv('ISO-8859-1', 'utf-8');
 
 //CRON
 var cronJob = require('cron').CronJob;
-new cronJob('*/20 * * * * *', function(){
+new cronJob('0 */5 * * * *', function(){
 	console.log("cron launch");
 	launchFeeds();
 }, null, true);
@@ -63,7 +63,7 @@ function getRssFeed(website, websiteShort, feedUrl, language, game){
 			.pipe(iconv)
 			.pipe(new FeedParser())
 			.on('error', function(error) {
-				console.error(error);
+				console.error(website + ": " + error);
 			})
 			.on('article', function(article) {
 				generateArticle(article, website, websiteShort, language, game);
@@ -76,7 +76,7 @@ function getRssFeed(website, websiteShort, feedUrl, language, game){
 		request(feedUrl)
 			.pipe(new FeedParser())
 			.on('error', function(error) {
-				console.error(error);
+				console.error(website + ": " + error);
 			})
 			.on('article', function(article) {
 				generateArticle(article, website, websiteShort, language, game);
