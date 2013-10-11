@@ -1,24 +1,18 @@
-console.log("bonjour!");
 //Modules
 var FeedParser 		= require('feedparser'); 
 var	request			= require('request');
 var moment 			= require('moment');
 var express 		= require('express');
-console.log("2bonjour!");
 
 //Files
 var tools 			= require('./tools');
 var api 			= require('./api');
-console.log("3bonjour!");
 
 var mongoConfig		= require('./mongoconfig');
 
-console.log("4bonjour!");
 
 var db 				= mongoConfig.db;
-console.log("5bonjour!");
 var app 			= express();
-console.log("6bonjour!");
 
 //API config
 app.get('/lang/:lang', api.findByLanguage);
@@ -27,34 +21,32 @@ app.get('/game/:game', api.findByGame);
 app.get('/duo/:website/:game', api.findByWebsiteAndGame);
 app.get('/posts/all/', api.findAll);
 app.get('/remove/all', api.removeAll);
-console.log("7bonjour!");
 
 var port = process.env.PORT || 5000;
 app.listen(port, function() {
   console.log("Listening on " + port);
 });
-console.log("8bonjour!");
 
 var Iconv = require('iconv').Iconv;
 var iconv = new Iconv('ISO-8859-1', 'utf-8');
 
 //CRON
 var cronJob = require('cron').CronJob;
-new cronJob('0 */4 * * * *', function(){
+new cronJob('*/20 * * * * *', function(){
+	console.log("cron launch");
 	launchFeeds();
 }, null, true);
 
-console.log("9bonjour!");
 
 function launchFeeds(){
-	getRssFeed("eSportsFrance", "esportsfrance", "http://www.esportsfrance.com/rss/esports.rss", "fr", null);
+	// getRssFeed("eSportsFrance", "esportsfrance", "http://www.esportsfrance.com/rss/esports.rss", "fr", null);
 	getRssFeed("O Gaming", "ogaming", "http://www.ogaming.tv/rss.xml", "fr", null);
 	getRssFeed("Team aAa", "teamaaa", "http://www.team-aaa.com/xml/news-rss-all.xml", "fr", null);
 	getRssFeed("TeamLiquid", "teamliquid", "http://www.teamliquid.net/rss/news.xml", "en", null);
 	getRssFeed("VaKarM", "vakarm", "http://feeds2.feedburner.com/vakarm", "fr", "csgo");
 	getRssFeed("HLTV", "hltv", "http://www.hltv.org/news.rss.php", "en", "csgo");
 	getRssFeed("Cadred", "cadred", "http://www.cadred.org/Rss/?type=news", "en", null);
-	// getRssFeed("IEWT", "iewt", "http://www.inesportwetrust.com/feed", "fr", null);
+	getRssFeed("IEWT", "iewt", "http://www.inesportwetrust.com/feed", "fr", null);
 	getRssFeed("Reddit", "reddit", "http://www.reddit.com/r/starcraft/.rss", "en", "sc2");
 	getRssFeed("Reddit", "reddit", "http://www.reddit.com/r/dota2/.rss", "en", "dota2");
 	getRssFeed("Reddit", "reddit", "http://www.reddit.com/r/leagueoflegends/.rss", "en", "lol");
