@@ -4,11 +4,11 @@ var Server = mongo.Server,
     Db = mongo.Db,
     BSON = mongo.BSONPure;
  
-var server = new Server('paulo.mongohq.com', 10037, {journal: false, fsync: false, w: 1, auto_reconnect: true});
-db = new Db('nodejitsudb4516955455', server);
+var server = new Server('ds045938.mongolab.com', 45938, {journal: false, fsync: false, w: 1, auto_reconnect: true});
+db = new Db('openesport', server);
  
 db.open(function(err, client) {
-	client.authenticate('nodejitsu', '52d6e2a8864bb185c2a401e420e56262', function(err, success) {
+	client.authenticate('openesport', 'oepwd13', function(err, success) {
 	    if(!err) {
 	        console.log("Connected to 'openesport' database");
 	    }
