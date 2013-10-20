@@ -55,7 +55,7 @@ exports.findByWebsiteAndGame = function(req, res) {
 };
 
 exports.findAll = function(req, res){
-	var websites = ["eSportsFrance", "O Gaming", "Team aAa", "Millenium", "VaKarM", "HLTV", "Reddit", "TeamLiquid", "Cadred"];
+	var websites = ["eSportsFrance", "O Gaming", "Team aAa", "Millenium", "VaKarM", "HLTV", "Reddit", "TeamLiquid", "Cadred", "IEWT"];
 	var allArticles = [];
 	var count = 0;
 	for(var i = 0 ; i < websites.length ; i++){
