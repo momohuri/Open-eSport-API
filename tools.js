@@ -9,8 +9,6 @@ module.exports = {
 			category = "dota2";
 		if((cat.toString().toLowerCase().indexOf("lol") > -1) || (cat.toString().toLowerCase().indexOf("league of legends") > -1))
 			category = "lol";
-		if((cat.toString().toLowerCase().indexOf("tf2") > -1))
-			category = "tf2";
 		if((cat.toString().toLowerCase().indexOf("csgo") > -1) || (cat.toString().toLowerCase().indexOf("counter-strike") > -1))
 			category = "csgo";
 		if((cat.toString().toLowerCase().indexOf("sm") > -1))

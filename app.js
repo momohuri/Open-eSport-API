@@ -46,7 +46,7 @@ function launchFeeds(){
 	getRssFeed("VaKarM", "vakarm", "http://feeds2.feedburner.com/vakarm", "fr", "csgo");
 	getRssFeed("HLTV", "hltv", "http://www.hltv.org/news.rss.php", "en", "csgo");
 	getRssFeed("Cadred", "cadred", "http://www.cadred.org/Rss/?type=news", "en", null);
-	// getRssFeed("IEWT", "iewt", "http://www.inesportwetrust.com/feed", "fr", null);
+	getRssFeed("IEWT", "iewt", "http://www.inesportwetrust.com/feed", "fr", null);
 	getRssFeed("Reddit", "reddit", "http://www.reddit.com/r/starcraft/.rss", "en", "sc2");
 	getRssFeed("Reddit", "reddit", "http://www.reddit.com/r/dota2/.rss", "en", "dota2");
 	getRssFeed("Reddit", "reddit", "http://www.reddit.com/r/leagueoflegends/.rss", "en", "lol");
@@ -168,6 +168,9 @@ function generateArticle(article, website, websiteShort, language, game){
 			//set author
 			if(website == "Millenium")
 				article.author = "Millenium";
+			
+			if(typeof article.author === 'undefined')
+				article.author = website;
 
 			//save to bdd
 			db.collection('articles').save({ 
