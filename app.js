@@ -32,7 +32,7 @@ var iconv = new Iconv('ISO-8859-1', 'utf-8');
 
 //CRON
 var cronJob = require('cron').CronJob;
-new cronJob('0 */5 * * * *', function(){
+new cronJob('0 * * * * *', function(){
 	console.log("cron launch");
 	launchFeeds();
 }, null, true);
@@ -166,7 +166,7 @@ function generateArticle(article, website, websiteShort, language, game){
 
 
 			//set author
-			if(typeof article.author === 'undefined' || article.website === 'null' || website === "Millenium" || website === "Team aAa")
+			if(typeof article.author === 'undefined' || article.author === 'null' || website === "Millenium" || website === "Team aAa")
 				article.author = website;
 
 			//save to bdd
