@@ -166,10 +166,7 @@ function generateArticle(article, website, websiteShort, language, game){
 
 
 			//set author
-			if(website == "Millenium")
-				article.author = "Millenium";
-			
-			if(typeof article.author === 'undefined')
+			if(typeof article.author === 'undefined' || article.website === 'null' || website === "Millenium" || website === "Team aAa")
 				article.author = website;
 
 			//save to bdd
