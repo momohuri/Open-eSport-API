@@ -14,12 +14,12 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
         // console.log("getArticle " + this.website);
         var self = this;
 
-        var ficonv = Iconv.Iconv;
-        if(this.web === "eSportsFrance"){
-            var iconv = new ficonv('ISO-8859-1', 'utf-8');
-        }else{
-            var iconv = new ficonv('utf-8', 'utf-8');
-        }
+        // var ficonv = Iconv.Iconv;
+        // if(this.web === "eSportsFrance"){
+        //     var iconv = new ficonv('ISO-8859-1', 'utf-8');
+        // }else{
+        //     var iconv = new ficonv('utf-8', 'utf-8');
+        // }
 
         request(this.url)
             // .pipe(iconv)

@@ -6,14 +6,14 @@ define(['cron', 'Feed'], function(cron, Feed){
 			var self = this;
 			var cronJob = cron.CronJob;
 			// console.log(cronJob);
-    		new cronJob('*/10 * * * * *', function(){
+    		new cronJob('0 * * * * *', function(){
 				console.log("launch cron");
 				self.launchFeeds();
 			}, null, true);
 		},
 
 		launchFeeds: function(){
-			new Feed("eSportsFrance", "esportsfrance", "http://www.esportsfrance.com/rss/esports.rss", "fr", null);
+			// new Feed("eSportsFrance", "esportsfrance", "http://www.esportsfrance.com/rss/esports.rss", "fr", null);
 			new Feed("O Gaming", "ogaming", "http://www.ogaming.tv/rss.xml", "fr", null);
 			new Feed("Team aAa", "teamaaa", "http://www.team-aaa.com/xml/news-rss-all.xml", "fr", null);
 			new Feed("TeamLiquid", "teamliquid", "http://www.teamliquid.net/rss/news.xml", "en", null);
