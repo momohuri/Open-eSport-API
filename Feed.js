@@ -48,8 +48,8 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
             cleanArticle.titleDate  = feedArticle.titleDate;
 
             cleanArticle.category   = self.setCategory(feedArticle);
-            cleanArticle.author     = self.setAuthor(self.website);
-            cleanArticle.pubDate    = moment(feedArticle.pubDate).toDate();
+            cleanArticle.author     = self.setAuthor(feedArticle);
+            cleanArticle.pubDate    = self.setPubDate(feedArticle);
 
             callback(cleanArticle, self.website, self.language);
         });
@@ -148,6 +148,18 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
         else 
             return article.author;
     }  
+
+    Feed.prototype.setPubDate = function(article){
+        var pubDate = moment(article.pubDate).toDate();
+
+        if(this.website === "Team aAa")
+            pubDate = moment(pubDate).add('hours', 2).toDate();
+        
+        return pubDate;
+    } 
+
+
+            
 
     Feed.prototype.saveArticle = function(article, website, language){
         db.collection('articles').save({ 
