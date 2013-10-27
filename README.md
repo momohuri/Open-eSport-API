@@ -42,8 +42,8 @@ All articles
 Thanks to
 ------------
 
-Dan MacTough for feedparser module
-Ben Noordhuis for iconv module
+- Dan MacTough for feedparser module
+- Ben Noordhuis for iconv module
 
 
 Licence
