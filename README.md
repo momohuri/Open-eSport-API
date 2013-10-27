@@ -23,20 +23,27 @@ How to use it ?
 
 Open eSport API provide JSON arrays
 
-<pre>/lang/:lang</pre>
 Articles from a language
+<pre>/lang/:lang</pre>
 
-<pre>/website/:website</pre>
 Articles from a website
+<pre>/website/:website</pre>
 
-<pre>/game/:game</pre>
 Articles with a specific game
+<pre>/game/:game</pre>
 
-<pre>/duo/:website/:game</pre>
 Articles from a website with a specific game
+<pre>/duo/:website/:game</pre>
 
-<pre>/posts/all/</pre>
 All articles
+<pre>/posts/all/</pre>
+
+
+Thanks to
+------------
+
+Dan MacTough for feedparser module
+Ben Noordhuis for iconv module
 
 
 Licence
