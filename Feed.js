@@ -44,12 +44,12 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
             var cleanArticle = {};
 
             cleanArticle.title      = feedArticle.title;
-            cleanArticle.link       = feedArticle.link;
             cleanArticle.titleDate  = feedArticle.titleDate;
 
             cleanArticle.category   = self.setCategory(feedArticle);
             cleanArticle.author     = self.setAuthor(feedArticle);
             cleanArticle.pubDate    = self.setPubDate(feedArticle);
+            cleanArticle.link       = self.setUrl(feedArticle);
 
             callback(cleanArticle, self.website, self.language);
         });
@@ -158,6 +158,12 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
         return pubDate;
     } 
 
+    Feed.prototype.setUrl = function(article){
+        if(this.website === "Reddit")
+            return article.link + ".compact";
+        else
+            return article.link;
+    }
 
             
 

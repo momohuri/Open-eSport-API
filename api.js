@@ -62,7 +62,7 @@ define([], function(){
 
 
 		removeAll: function(req, res) {
-			db.collection('articles').remove();
+			db.collection('articles').remove({ website: "Reddit" });
 			res.send(200);
 		}
 
