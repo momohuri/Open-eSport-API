@@ -21,14 +21,14 @@ define([], function(){
 	return{
 
 		findAll: function(req, res){
-			var websites = ["eSportsFrance", "O Gaming", "Team aAa", "Millenium", "VaKarM", "HLTV", "Reddit", "TeamLiquid", "Cadred", "IEWT"];
+			var websites = ["eSportsFrance", "O Gaming", "Team aAa", "Millenium", "VaKarM", "HLTV", "Reddit", "TeamLiquid", "Cadred", "IEWT", "Thunderbot"];
 			getArticlesFromWebsites(websites, function(articles){
 				res.send(articles);
 			});
 		},
 
 		findByLanguage: function(req, res) {
-			var websitesFR = ["eSportsFrance", "O Gaming", "Team aAa", "Millenium", "VaKarM"];
+			var websitesFR = ["eSportsFrance", "O Gaming", "Team aAa", "Millenium", "VaKarM", "Thunderbot"];
 			var websitesEN = ["HLTV", "Reddit", "TeamLiquid", "Cadred"];
 			if(req.params.lang == "fr"){
 				getArticlesFromWebsites(websitesFR, function(articles){
