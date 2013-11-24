@@ -140,7 +140,7 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
     }
 
     Feed.prototype.setAuthor = function(article){
-        if(this.website === "Millenium" || this.website === "Team aAa")
+        if(this.website === "Millenium" || this.website === "Team aAa" || this.website === "SK Gaming")
             return this.website;
         else 
             return article.author;
