@@ -57,7 +57,7 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
 
     Feed.prototype.checkIfAlreadyExist = function(article, callback){
         var self = this;
-
+        
         db.collection('articles').findOne({
             titleDate: article.titleDate
         }, function(error, articleFound){
@@ -65,17 +65,11 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
             else if(!articleFound || typeof articleFound == 'undefined'){
                 var id_url = null;
 
-                if(self.website == "eSportsFrance"){
-                    id_url = article.link.split("/");
-                    id_url = id_url[5].split("-");
-                    id_url = id_url[0];
-
-                }
-                if(self.website == "Millenium"){
+                if(self.website === "Millenium"){
                     id_url = article.link.split("-");
                     id_url = id_url[id_url.length-1];
                 }
-                if(self.website == "Team aAa"){
+                if(self.website === "Team aAa"){
                     id_url = article.link.split("/");
                     id_url = id_url[3].split("-");
                     id_url = id_url[1];
@@ -91,12 +85,15 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
                         })
                     })
                 }
+                callback();    
 
                 //Suppression des articles avec le même URL
-                db.collection('articles').remove({
-                    link: article.link
-                });
-                callback();
+                // db.collection('articles').remove({
+                //     link: article.link
+                // }, function(){
+                //     if(self.website === "SK Gaming")
+                //         console.log("removed: " + article.title)
+                // });
             }
         });
     }
@@ -125,7 +122,7 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
 
         if((cat.toString().toLowerCase().indexOf("starcraft") > -1) || (cat.toString().toLowerCase().indexOf("sc2") > -1))
             category = "sc2";
-        if((cat.toString().toLowerCase().indexOf("dota2") > -1) || (cat.toString().toLowerCase().indexOf("defense of the ancients") > -1))
+        if((cat.toString().toLowerCase().indexOf("dota 2") > -1) || (cat.toString().toLowerCase().indexOf("dota2") > -1) || (cat.toString().toLowerCase().indexOf("defense of the ancients") > -1))
             category = "dota2";
         if((cat.toString().toLowerCase().indexOf("lol") > -1) || (cat.toString().toLowerCase().indexOf("league of legends") > -1))
             category = "lol";
@@ -178,6 +175,7 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
             language:       language,
             titleDate:      article.titleDate
         });
+
     } 
 
     return Feed;

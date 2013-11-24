@@ -21,15 +21,15 @@ define([], function(){
 	return{
 
 		findAll: function(req, res){
-			var websites = ["eSportsFrance", "O Gaming", "Team aAa", "Millenium", "VaKarM", "HLTV", "Reddit", "TeamLiquid", "Cadred", "IEWT", "Thunderbot"];
+			var websites = ["O Gaming", "Team aAa", "Millenium", "VaKarM", "HLTV", "Reddit", "TeamLiquid", "IEWT", "Thunderbot", "onGamers", "SK Gaming"];
 			getArticlesFromWebsites(websites, function(articles){
 				res.send(articles);
 			});
 		},
 
 		findByLanguage: function(req, res) {
-			var websitesFR = ["eSportsFrance", "O Gaming", "Team aAa", "Millenium", "VaKarM", "Thunderbot"];
-			var websitesEN = ["HLTV", "Reddit", "TeamLiquid", "Cadred"];
+			var websitesFR = ["O Gaming", "Team aAa", "Millenium", "VaKarM", "Thunderbot", "IEWT"];
+			var websitesEN = ["HLTV", "Reddit", "TeamLiquid", "onGamers", "SK Gaming"];
 			if(req.params.lang == "fr"){
 				getArticlesFromWebsites(websitesFR, function(articles){
 					res.send(articles);
@@ -62,7 +62,7 @@ define([], function(){
 
 
 		removeAll: function(req, res) {
-			db.collection('articles').remove({ website: "Thunderbot" });
+			db.collection('articles').remove({ website: "SK Gaming" });
 			res.send(200);
 		}
 

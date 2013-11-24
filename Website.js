@@ -14,7 +14,6 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
     Website.prototype.getArticlesThunderbot = function(){
         // console.log("getArticle " + this.website);
         var self = this;
-        console.log("getting thunderbot articles");
         request(this.url, function(err, resp, body){
             $ = cheerio.load(body);
             var links = $('.article>a.title_thunder');
@@ -33,7 +32,6 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
                 var currentHour = moment().format('H:mm:ss', 'fr');
                 article.pubDate = moment(dateArray + " " + currentHour, 'DD MMM YYYY H:mm:ss', 'fr').toDate();
                 article.titleDate = article.title + "-" + article.link;
-                console.log(article.title + "\n" + article.author + "\n" + article.pubDate.toString() + "\n" + article.link);
                 self.checkIfAlreadyExist(article, function(){
                     self.saveArticle(article, self.website, self.language, self.game);
                 });
