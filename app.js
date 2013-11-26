@@ -9,7 +9,6 @@ requirejs.config({
 requirejs(['api', 'express', 'mongoconfig', 'routes'], function(api, express, mongo, routes){
 	// var db 				= mongo.db;
 	var app 			= express();
-	app.use(allowCrossDomain)
 	
 	var port = process.env.PORT || 5000;
 	var mongodb = mongo.init();
