@@ -20,7 +20,7 @@ define(['cron', 'Feed', 'Website'], function(cron, Feed, Website){
 			new Feed("TeamLiquid", "teamliquid", "http://www.teamliquid.net/rss/news.xml", "en", null);
 			new Feed("VaKarM", "vakarm", "http://feeds2.feedburner.com/vakarm", "fr", "csgo");
 			new Feed("HLTV", "hltv", "http://www.hltv.org/news.rss.php", "en", "csgo");
-			new Feed("Cadred", "cadred", "http://www.cadred.org/Rss/?type=news", "en", null);
+			// new Feed("Cadred", "cadred", "http://www.cadred.org/Rss/?type=news", "en", null);
 			new Feed("IEWT", "iewt", "http://www.inesportwetrust.com/feed", "fr", null);
 			new Feed("Reddit", "reddit", "http://www.reddit.com/r/starcraft/.rss", "en", "sc2");
 			new Feed("Reddit", "reddit", "http://www.reddit.com/r/dota2/.rss", "en", "dota2");

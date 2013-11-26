@@ -59,7 +59,10 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
         var self = this;
         
         db.collection('articles').findOne({
-            titleDate: article.titleDate
+            $or: [ 
+                { titleDate: article.titleDate }, 
+                { $and: [ { title: article.title }, { website: self.website } ] } 
+            ]
         }, function(error, articleFound){
             if(error) console.log("Error");
             else if(!articleFound || typeof articleFound == 'undefined'){
