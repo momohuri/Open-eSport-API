@@ -8,6 +8,7 @@ define(['api'], function(api){
 			app.get('/game/:game', api.findByGame);
 			app.get('/duo/:website/:game', api.findByWebsiteAndGame);
 			app.get('/posts/all/', api.findAll);
+			app.get('/posts/all', api.findAll);
 			app.get('/remove/all', api.removeAll);
 		}
 

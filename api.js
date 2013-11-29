@@ -43,28 +43,35 @@ define([], function(){
 		},
 
 		findByWebsite: function(req, res) {
-			db.collection('articles').find({website: req.params.website}).sort({ pubDate: -1 }).limit(20).toArray(function(err, articles){
+			db.collection('articles').find({website: req.params.website}).sort({ pubDate: -1 }).limit(40).toArray(function(err, articles){
 				if(!err) res.send(articles);
 			});
 		},
 
 		findByGame: function(req, res) {
-			db.collection('articles').find({categories: req.params.game}).sort({ pubDate: -1 }).limit(60).toArray(function(err, articles){
-				if(!err) res.send(articles);
-			});
+			if(req.params.game === 'others'){
+				db.collection('articles').find({ $and: [ { category: { $ne: 'lol' } }, { category: { $ne: 'sc2' } }, { category: { $ne: 'dota2' } }, { category: { $ne: 'csgo' } },  ]}).sort({ pubDate: -1 }).limit(80).toArray(function(err, articles){
+					if(!err) res.send(articles);
+				});
+			}
+			else{
+				db.collection('articles').find({category: req.params.game}).sort({ pubDate: -1 }).limit(80).toArray(function(err, articles){
+					if(!err) res.send(articles);
+				});
+			}
 		},
 
 		findByWebsiteAndGame: function(req, res) {
-			db.collection('articles').find({website: req.params.website, categories: req.params.game}).sort({ pubDate: -1 }).limit(20).toArray(function(err, articles){
+			db.collection('articles').find({website: req.params.website, category: req.params.game}).sort({ pubDate: -1 }).limit(40).toArray(function(err, articles){
 				if(!err) res.send(articles);
 			});
 		},
 
 
-		removeAll: function(req, res) {
-			db.collection('articles').remove();
-			res.send(200);
-		}
+		// removeAll: function(req, res) {
+		// 	db.collection('articles').remove();
+		// 	res.send(200);
+		// }
 
 	}
 

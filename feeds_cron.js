@@ -6,7 +6,7 @@ define(['cron', 'Feed', 'Website'], function(cron, Feed, Website){
 			var self = this;
 			var cronJob = cron.CronJob;
 			// console.log(cronJob);
-    		new cronJob('0 * * * * *', function(){
+    		new cronJob('0 */2 * * * *', function(){
 				console.log("launch cron");
 				self.launchFeeds();
 			}, null, true);
