@@ -9,7 +9,7 @@ define(['api'], function(api){
 			app.get('/duo/:website/:game', api.findByWebsiteAndGame);
 			app.get('/posts/all/', api.findAll);
 			app.get('/posts/all', api.findAll);
-			app.get('/remove/all', api.removeAll);
+			// app.get('/remove/all', api.removeAll);
 		}
 
 	}
