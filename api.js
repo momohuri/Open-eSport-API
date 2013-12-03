@@ -91,13 +91,13 @@ define([], function(){
 			db.collection('articles').find({website: req.params.website, category: req.params.game}).sort({ pubDate: -1 }).limit(40).toArray(function(err, articles){
 				if(!err) res.send(articles);
 			});
+		},
+
+
+		removeAll: function(req, res) {
+			db.collection('articles').remove();
+			res.send(200);
 		}
-
-
-		// removeAll: function(req, res) {
-		// 	db.collection('articles').remove();
-		// 	res.send(200);
-		// }
 
 	}
 

@@ -37,16 +37,20 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
 
     Feed.prototype.shapeArticle = function(feedArticle, callback){
         var self = this;
+        
+        if(self.website === "Millenium")
+            feedArticle.pubDate = moment().toDate();
 
         feedArticle.titleDate = feedArticle.title + "-" + feedArticle.pubDate;
-
+        feedArticle.category   = self.setCategory(feedArticle);
+        
         this.checkIfAlreadyExist(feedArticle, function(){
             var cleanArticle = {};
 
             cleanArticle.title      = feedArticle.title;
             cleanArticle.titleDate  = feedArticle.titleDate;
+            cleanArticle.category   = feedArticle.category;
 
-            cleanArticle.category   = self.setCategory(feedArticle);
             cleanArticle.author     = self.setAuthor(feedArticle);
             cleanArticle.pubDate    = self.setPubDate(feedArticle);
             cleanArticle.link       = self.setUrl(feedArticle);
@@ -60,8 +64,8 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
         
         db.collection('articles').findOne({
             $or: [ 
-                { titleDate: article.titleDate }, 
-                { $and: [ { title: article.title }, { website: self.website } ] } 
+                { $and: [ { titleDate: article.titleDate }, { category: self.game } ] }, 
+                { $and: [ { title: article.title }, { website: self.website }, { category: self.game } ] } 
             ]
         }, function(error, articleFound){
             if(error) console.log("Error");
@@ -151,6 +155,10 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
 
     Feed.prototype.setPubDate = function(article){
         var pubDate = moment(article.pubDate).toDate();
+
+        if(this.website === "Millenium"){
+            pubDate = moment().toDate();
+        }
 
         if(this.website === "Team aAa")
             pubDate = moment(pubDate).add('hours', 2).toDate();
