@@ -64,8 +64,8 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
         
         db.collection('articles').findOne({
             $or: [ 
-                { $and: [ { titleDate: article.titleDate }, { $or: [ { category: self.game }, { category: self.website } ] } ] }, 
-                { $and: [ { title: article.title }, { website: self.website }, { $or: [{ category: self.game }, {category: self.website}] } ] } 
+                { $and: [ { titleDate: article.titleDate }, { category: article.category } ] }, 
+                { $and: [ { title: article.title }, { website: self.website }, { category: article.category } ] } 
             ]
         }, function(error, articleFound){
             if(error) console.log("Error");
