@@ -42,7 +42,7 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
             feedArticle.pubDate = moment().toDate();
 
         feedArticle.titleDate = feedArticle.title + "-" + feedArticle.pubDate;
-        feedArticle.category   = self.setCategory(feedArticle);
+        feedArticle.category = self.setCategory(feedArticle);
         
         this.checkIfAlreadyExist(feedArticle, function(){
             var cleanArticle = {};
@@ -64,8 +64,8 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
         
         db.collection('articles').findOne({
             $or: [ 
-                { $and: [ { titleDate: article.titleDate }, { category: self.game } ] }, 
-                { $and: [ { title: article.title }, { website: self.website }, { category: self.game } ] } 
+                { $and: [ { titleDate: article.titleDate }, { $or: [ { category: self.game }, { category: self.website } ] } ] }, 
+                { $and: [ { title: article.title }, { website: self.website }, { $or: [{ category: self.game }, {category: self.website}] } ] } 
             ]
         }, function(error, articleFound){
             if(error) console.log("Error");
