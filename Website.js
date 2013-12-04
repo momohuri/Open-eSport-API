@@ -6,13 +6,14 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
         this.url = url;
         this.language = language;
         this.game = game;
-        if(this.website === 'Thunderbot');
+        if(this.website === 'Thunderbot')
             this.getArticlesThunderbot();
+        else if(this.website === 'dota2fr')
+            this.getArticlesDota2fr();
     }
 
 
     Website.prototype.getArticlesThunderbot = function(){
-        // console.log("getArticle " + this.website);
         var self = this;
         request(this.url, function(err, resp, body){
             $ = cheerio.load(body);
@@ -31,6 +32,27 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
                 dateArray = dateArray.substr(dateArray.indexOf(" ") + 1);
                 var currentHour = moment().format('H:mm:ss', 'fr');
                 article.pubDate = moment(dateArray + " " + currentHour, 'DD MMM YYYY H:mm:ss', 'fr').toDate();
+                article.titleDate = article.title + "-" + article.link;
+                self.checkIfAlreadyExist(article, function(){
+                    self.saveArticle(article, self.website, self.language, self.game);
+                });
+            });
+        });
+    }
+
+    Website.prototype.getArticlesDota2fr = function(){
+        var self = this;
+        request(this.url, function(err, resp, body){
+            $ = cheerio.load(body);
+            var links = $('.intro>h3>a');
+            var dates = $('.intro>.date');
+            $(links).each(function(i, content){
+                var article = {};
+                article.title = $(content).text();
+                article.link = $(content).attr('href');
+                var date = dates[i].children[0].data;
+                var currentHour = moment().format('H:mm:ss', 'fr');
+                article.pubDate = moment(date + " " + currentHour, 'DD MMM YYYY H:mm:ss', 'fr').toDate();
                 article.titleDate = article.title + "-" + article.link;
                 self.checkIfAlreadyExist(article, function(){
                     self.saveArticle(article, self.website, self.language, self.game);
