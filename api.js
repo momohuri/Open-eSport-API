@@ -96,7 +96,7 @@ define([], function(){
 
 
 		removeAll: function(req, res) {
-			db.collection('articles').remove({ $or: [ { website: "Team aAa"}, {website: "TeamLiquid"}, {website: "IEWT"}, {website: "O Gaming"}]});
+			db.collection('articles').remove({ website: "dota2fr" });
 			res.send(200);
 		}
 

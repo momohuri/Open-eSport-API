@@ -49,7 +49,7 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
             $(links).each(function(i, content){
                 var article = {};
                 article.title = $(content).text();
-                article.link = $(content).attr('href');
+                article.link = "http://www.dota2.fr" + $(content).attr('href');
                 var date = dates[i].children[0].data;
                 var currentHour = moment().format('H:mm:ss', 'fr');
                 article.pubDate = moment(date + " " + currentHour, 'DD MMM YYYY H:mm:ss', 'fr').toDate();
