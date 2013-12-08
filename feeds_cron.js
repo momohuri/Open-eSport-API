@@ -21,6 +21,7 @@ define(['cron', 'Feed', 'Website'], function(cron, Feed, Website){
 			new Feed("TeamLiquid", "teamliquid", "http://www.teamliquid.net/rss/news.xml", "en", null);
 			new Feed("VaKarM", "vakarm", "http://feeds2.feedburner.com/vakarm", "fr", "csgo");
 			new Feed("VaKarM", "vakarm", "http://feeds2.feedburner.com/vakarm_coverage", "fr", "csgo");
+			new Feed("VaKarM", "vakarm", "http://www.vakarm.net/breves.xml", "fr", "csgo");
 			new Feed("HLTV", "hltv", "http://www.hltv.org/news.rss.php", "en", "csgo");
 			new Feed("Esport Actu", "esportactu", "http://www.esportactu.fr/rss.xml", "fr", null);
 			// new Feed("Cadred", "cadred", "http://www.cadred.org/Rss/?type=news", "en", null);
