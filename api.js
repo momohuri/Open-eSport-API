@@ -54,7 +54,7 @@ define([], function(){
 
 		findAll: function(req, res){
 			var websites = ["O Gaming", "Team aAa", "Millenium", "VaKarM", "HLTV", "Reddit", "Esport Actu",
-							"dota2fr", "TeamLiquid", "IEWT", "Thunderbot", "onGamers", "SK Gaming", "joinDOTA"];
+							"dota2fr", "TeamLiquid", "IEWT", "Thunderbot", "onGamers", "SK Gaming", "joinDOTA", "Esports Express"];
 			getArticlesFromWebsites(websites, function(articles){
 				res.send(articles);
 			});
@@ -62,7 +62,7 @@ define([], function(){
 
 		findByLanguage: function(req, res) {
 			var websitesFR = ["O Gaming", "Team aAa", "Millenium", "Esport Actu", "VaKarM", "Thunderbot", "IEWT", "dota2fr"];
-			var websitesEN = ["HLTV", "Reddit", "TeamLiquid", "onGamers", "SK Gaming", "joinDOTA"];
+			var websitesEN = ["HLTV", "Reddit", "TeamLiquid", "onGamers", "SK Gaming", "joinDOTA", "Esports Express"];
 			if(req.params.lang == "fr"){
 				getArticlesFromWebsites(websitesFR, function(articles){
 					res.send(articles);
@@ -82,7 +82,8 @@ define([], function(){
 		},
 
 		findByGame: function(req, res) {
-			var websites = ["O Gaming", "Team aAa", "Millenium", "VaKarM", "Esport Actu", "HLTV", "Reddit", "TeamLiquid", "IEWT", "Thunderbot", "onGamers", "SK Gaming", "joinDOTA", "dota2fr"];
+			var websites = ["O Gaming", "Team aAa", "Millenium", "VaKarM", "Esport Actu", "HLTV", "Reddit", "TeamLiquid"
+							, "IEWT", "Thunderbot", "onGamers", "SK Gaming", "joinDOTA", "dota2fr", "Esports Express"];
 			getArticlesFromWebsitesAndGame(websites, req.params.game, function(articles){
 				res.send(articles);
 			});

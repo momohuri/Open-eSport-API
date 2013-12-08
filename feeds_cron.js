@@ -41,6 +41,7 @@ define(['cron', 'Feed', 'Website'], function(cron, Feed, Website){
 			new Feed("SK Gaming", "skgaming", "http://www.sk-gaming.com/rss/channel/lol", "en", "lol");
 			new Feed("SK Gaming", "skgaming", "http://www.sk-gaming.com/rss/channel/sc2", "en", "sc2");
 			new Feed("SK Gaming", "skgaming", "http://www.sk-gaming.com/rss/channel/cs", "en", "csgo");
+			new Feed("Esports Express", "esportsexpress", "http://esportsexpress.com/feed/", "en", null);
 		}
 	}
 });
