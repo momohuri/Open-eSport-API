@@ -15,7 +15,7 @@ define(['cron', 'Feed', 'Website'], function(cron, Feed, Website){
 		launchFeeds: function(){
 			// new Feed("eSportsFrance", "esportsfrance", "http://www.esportsfrance.com/rss/esports.rss", "fr", null);
 			new Website("Thunderbot", "thunderbot", "http://www.thunderbot.gg", "fr", "lol");
-			new Website("dota2fr", "dota2fr", "http://www.dota2.fr/news", "fr", "dota2");
+			// new Website("dota2fr", "dota2fr", "http://www.dota2.fr/news", "fr", "dota2");
 			new Feed("O Gaming", "ogaming", "http://www.ogaming.tv/rss.xml", "fr", null);
 			new Feed("Team aAa", "teamaaa", "http://www.team-aaa.com/xml/news-rss-all.xml", "fr", null);
 			new Feed("TeamLiquid", "teamliquid", "http://www.teamliquid.net/rss/news.xml", "en", null);
@@ -24,6 +24,7 @@ define(['cron', 'Feed', 'Website'], function(cron, Feed, Website){
 			new Feed("VaKarM", "vakarm", "http://www.vakarm.net/breves.xml", "fr", "csgo");
 			new Feed("HLTV", "hltv", "http://www.hltv.org/news.rss.php", "en", "csgo");
 			new Feed("Esport Actu", "esportactu", "http://www.esportactu.fr/rss.xml", "fr", null);
+			new Feed("dota2fr", "dota2fr", "http://www.dota2.fr/rss/feed/news", "fr", "dota2");
 			// new Feed("Cadred", "cadred", "http://www.cadred.org/Rss/?type=news", "en", null);
 			new Feed("IEWT", "iewt", "http://www.inesportwetrust.com/feed", "fr", null);
 			new Feed("joinDOTA", "joindota", "http://www.joindota.com/feeds/news", "en", "dota2");
