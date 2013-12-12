@@ -15,6 +15,10 @@ define(['cron', 'Feed', 'Website'], function(cron, Feed, Website){
 		launchFeeds: function(){
 			// new Feed("eSportsFrance", "esportsfrance", "http://www.esportsfrance.com/rss/esports.rss", "fr", null);
 			new Website("Thunderbot", "thunderbot", "http://www.thunderbot.gg", "fr", "lol");
+			new Website("Esports Heaven", "esportsheaven", "http://www.esportsheaven.com/index/filter/LoL", "en", "lol");
+			new Website("Esports Heaven", "esportsheaven", "http://www.esportsheaven.com/index/filter/Starcraft", "en", "sc2");
+			new Website("Esports Heaven", "esportsheaven", "http://www.esportsheaven.com/index/filter/DotA2", "en", "dota2");
+			new Website("Esports Heaven", "esportsheaven", "http://www.esportsheaven.com/index/filter/CSGO", "en", "csgo");
 			// new Website("dota2fr", "dota2fr", "http://www.dota2.fr/news", "fr", "dota2");
 			new Feed("O Gaming", "ogaming", "http://www.ogaming.tv/rss.xml", "fr", null);
 			new Feed("Team aAa", "teamaaa", "http://www.team-aaa.com/xml/news-rss-all.xml", "fr", null);

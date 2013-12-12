@@ -10,6 +10,8 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
             this.getArticlesThunderbot();
         else if(this.website === 'dota2fr')
             this.getArticlesDota2fr();
+        else if(this.website === 'Esports Heaven')
+            this.getArticlesEsportsHeaven();
     }
 
 
@@ -58,6 +60,73 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
                     self.saveArticle(article, self.website, self.language, self.game);
                 });
             });
+        });
+    }
+
+    Website.prototype.getArticlesEsportsHeaven = function(){
+        var self = this;
+        request(this.url, function(err, resp, body){
+            $ = cheerio.load(body);
+            var subLinks = $('.list-headlines>.item>.title>a');
+            var subDates = $('.list-headlines>.item .date');
+            var subAuthors = $('.list-headlines>.item .author');
+
+            $(subLinks).each(function(i, content){
+                var article = {};
+                article.title = $(content).text();
+                article.link = "http://www.esportsheaven.com" + $(content).attr('href');
+                article.author = subAuthors[i].children[0].data;
+                var date = subDates[i].children[0].data;
+
+                if(date.indexOf('today') > -1){
+                    date = date.split(",");
+                    article.pubDate = moment(date[1], 'H:mm').toDate();
+                }
+                else if(date.indexOf('yesterday') > -1){
+                    date = date.split(",");
+                    article.pubDate = moment(date[1], 'H:mm').subtract('days', 1).toDate();
+                }
+                else{
+                    article.pubDate = moment(date, 'DD MMM YYYY, H:mm', 'en').toDate();
+                }
+
+                article.titleDate = article.title + "-" + article.pubDate;
+
+                self.checkIfAlreadyExist(article, function(){
+                    self.saveArticle(article, self.website, self.language, self.game);
+                });
+            });
+
+            var headLinks = $('.headlines>.body>.filter_feature>h1>a');
+            var headDates = $('.headlines>.body>.filter_feature .date');
+            var headAuthors = $('.headlines>.body>.filter_feature .author');
+
+            $(headLinks).each(function(i, content){
+                var article = {};
+                article.title = $(content).text();
+                article.link = "http://www.esportsheaven.com" + $(content).attr('href');
+                article.author = headAuthors[i].children[0].data;
+                var date = headDates[i].children[0].data;
+
+                if(date.indexOf('today') > -1){
+                    date = date.split(",");
+                    article.pubDate = moment(date[1], 'H:mm').toDate();
+                }
+                else if(date.indexOf('yesterday') > -1){
+                    date = date.split(",");
+                    article.pubDate = moment(date[1], 'H:mm').subtract('days', 1).toDate();
+                }
+                else{
+                    article.pubDate = moment(date, 'DD MMM YYYY, H:mm', 'en').toDate();
+                }
+
+                article.titleDate = article.title + "-" + article.pubDate;
+
+                self.checkIfAlreadyExist(article, function(){
+                    self.saveArticle(article, self.website, self.language, self.game);
+                });
+            });
+            
         });
     }
 
