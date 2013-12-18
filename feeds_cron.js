@@ -24,12 +24,12 @@ define(['cron', 'Feed', 'Website'], function(cron, Feed, Website){
 			new Feed("TeamLiquid", "teamliquid", "http://www.teamliquid.net/rss/news.xml", "en", null);
 			new Feed("VaKarM", "vakarm", "http://feeds2.feedburner.com/vakarm", "fr", "csgo");
 			new Feed("VaKarM", "vakarm", "http://feeds2.feedburner.com/vakarm_coverage", "fr", "csgo");
-			new Feed("VaKarM", "vakarm", "http://www.vakarm.net/breves.xml", "fr", "csgo");
+			// new Feed("VaKarM", "vakarm", "http://www.vakarm.net/breves.xml", "fr", "csgo");
 			new Feed("HLTV", "hltv", "http://www.hltv.org/news.rss.php", "en", "csgo");
 			new Feed("Esport Actu", "esportactu", "http://www.esportactu.fr/rss.xml", "fr", null);
 			new Feed("dota2fr", "dota2fr", "http://www.dota2.fr/rss/feed/news", "fr", "dota2");
 			new Feed("Shoryuken", "shoryuken", "http://shoryuken.com/feed/", "en", "versus");
-			// new Feed("ESReality", "esreality", "http://www.esreality.com/rss_xml.php", "en", "ql");
+			new Feed("ESReality", "esreality", "http://www.esreality.com/rss_xml.php", "en", "ql");
 			new Feed("IEWT", "iewt", "http://www.inesportwetrust.com/feed", "fr", null);
 			new Feed("joinDOTA", "joindota", "http://www.joindota.com/feeds/news", "en", "dota2");
 			new Feed("Reddit", "reddit", "http://www.reddit.com/r/starcraft/.rss", "en", "sc2");

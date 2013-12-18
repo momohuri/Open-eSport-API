@@ -25,14 +25,14 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
             // .pipe(iconv)
             .pipe(new FeedParser())
             .on('error', function(error) {
-                console.error(self.website + ": " + error + "game: " + self.game);
+                console.error(self.website + ": " + error + ". Game: " + self.game);
             })
-            .on('article', function(feedArticle) {
-                self.shapeArticle(feedArticle, self.saveArticle);
+            .on('readable', function() {
+                var stream = this, item;
+                while (feedArticle = stream.read()) {
+                    self.shapeArticle(feedArticle, self.saveArticle);
+                }
             })
-            .on('end', function () {
-                // console.log("finished " + self.website);
-            });
     }
 
     Feed.prototype.shapeArticle = function(feedArticle, callback){
@@ -94,12 +94,13 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
                     db.collection('articles').find({website: self.website}).toArray(function(err, articlesDuplicate){
                         articlesDuplicate.forEach(function(articleDuplicate){
                             if(articleDuplicate.link.indexOf(id_url) != -1){
+                                console.log("article removed: " + articleDuplicate.title);
                                 db.collection('articles').remove({link: articleDuplicate.link})
                             }
                         })
+                        callback(true);
                     })
                 }
-                callback(true);    
 
                 //Suppression des articles avec le même URL
                 // db.collection('articles').remove({
@@ -213,7 +214,7 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
             }
             else
             {
-                console.log("new article: " + JSON.stringify(saved));
+                console.log("new article: " + saved[0].title);
             }
         }
         );

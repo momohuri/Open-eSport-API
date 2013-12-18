@@ -148,7 +148,7 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
     }
 
     Website.prototype.saveArticle = function(article, website, language, game){
-        db.collection('articles').save({ 
+        db.collection('articles').insert({ 
             title:          article.title, 
             website:        website,
             category:       game,
@@ -157,7 +157,21 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
             author:         article.author,
             language:       language,
             titleDate:      article.titleDate
-        });
+        }
+        ,function(error, saved)
+        {
+            if(error || !saved)
+            {
+                console.log("FAILED " + website);
+                console.log("ERROR: " + error);
+                console.log("save: " + saved);
+            }
+            else
+            {
+                console.log("new article: " + saved[0].title);
+            }
+        }
+        );
     } 
 
     return Website;
