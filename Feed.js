@@ -38,24 +38,27 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
     Feed.prototype.shapeArticle = function(feedArticle, callback){
         var self = this;
         
-        if(self.website === "Millenium")
+         if(this.website === "Millenium"){
             feedArticle.pubDate = moment().toDate();
+        }
 
         feedArticle.titleDate = feedArticle.title + "-" + feedArticle.pubDate;
         feedArticle.category = self.setCategory(feedArticle);
         
-        this.checkIfAlreadyExist(feedArticle, function(){
-            var cleanArticle = {};
+        this.checkIfAlreadyExist(feedArticle, function(noArticle){
+            if(noArticle){
+                
+                var cleanArticle = {};
+                cleanArticle.title      = feedArticle.title;
+                cleanArticle.titleDate  = feedArticle.titleDate;
+                cleanArticle.category   = feedArticle.category;
 
-            cleanArticle.title      = feedArticle.title;
-            cleanArticle.titleDate  = feedArticle.titleDate;
-            cleanArticle.category   = feedArticle.category;
+                cleanArticle.author     = self.setAuthor(feedArticle);
+                cleanArticle.pubDate    = self.setPubDate(feedArticle);
+                cleanArticle.link       = self.setUrl(feedArticle);
 
-            cleanArticle.author     = self.setAuthor(feedArticle);
-            cleanArticle.pubDate    = self.setPubDate(feedArticle);
-            cleanArticle.link       = self.setUrl(feedArticle);
-
-            callback(cleanArticle, self.website, self.language);
+                callback(cleanArticle, self.website, self.language);
+            }
         });
     }
 
@@ -76,14 +79,18 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
                     id_url = article.link.split("-");
                     id_url = id_url[id_url.length-1];
                 }
-                if(self.website === "Team aAa"){
+                else if(self.website === "Team aAa"){
                     id_url = article.link.split("/");
                     id_url = id_url[3].split("-");
                     id_url = id_url[1];
                 }
+                else if(self.website === "Esport Actu"){
+                    id_url = article.link.split("/");
+                    id_url = id_url[4].split("-");
+                    id_url = id_url[0];
+                }
 
                 if(id_url != null){
-                    var likeTitle = ".*" + id_url + ".*";
                     db.collection('articles').find({website: self.website}).toArray(function(err, articlesDuplicate){
                         articlesDuplicate.forEach(function(articleDuplicate){
                             if(articleDuplicate.link.indexOf(id_url) != -1){
@@ -92,7 +99,7 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
                         })
                     })
                 }
-                callback();    
+                callback(true);    
 
                 //Suppression des articles avec le même URL
                 // db.collection('articles').remove({
@@ -102,6 +109,7 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
                 //         console.log("removed: " + article.title)
                 // });
             }
+            else callback(false);
         });
     }
 
@@ -135,13 +143,13 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
             category = "lol";
         if((cat.toString().toLowerCase().indexOf("csgo") > -1) || (cat.toString().toLowerCase().indexOf("counter-strike") > -1))
             category = "csgo";
-        if((cat.toString().toLowerCase().indexOf("sm") > -1))
-            category = "sm";
-        if((cat.toString().toLowerCase().indexOf("ql") > -1))
+        if((cat.toString().toLowerCase().indexOf("ql") > -1) || (cat.toString().toLowerCase().indexOf("quake") > -1))
             category = "ql";
+        if((cat.toString().toLowerCase().indexOf("hearthstone") > -1))
+            category = "hearthstone";
         if((cat.toString().toLowerCase().indexOf("sf4") > -1) || (cat.toString().toLowerCase().indexOf("street fighter") > -1) || 
             (cat.toString().toLowerCase().indexOf("baston") > -1))
-            category = "sf4";
+            category = "versus";
 
         return category;
     }
@@ -176,7 +184,16 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
             
 
     Feed.prototype.saveArticle = function(article, website, language){
-        db.collection('articles').save({ 
+        // console.log("new article from: " + website);
+        // console.log("title: " + article.title);
+        // console.log("title: " + article.category);
+        // console.log("title: " + article.link);
+        // console.log("title: " + article.pubDate);
+        // console.log("title: " + article.author);
+        // console.log("title: " + article.titleDate);
+        // console.log("title: " + language);
+
+        db.collection('articles').insert({ 
             title:          article.title, 
             website:        website,
             category:       article.category,
@@ -185,7 +202,21 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
             author:         article.author,
             language:       language,
             titleDate:      article.titleDate
-        });
+        }
+        ,function(error, saved)
+        {
+            if(error || !saved)
+            {
+                console.log("FAILED " + website);
+                console.log("ERROR: " + error);
+                console.log("save: " + saved);
+            }
+            else
+            {
+                console.log("new article: " + JSON.stringify(saved));
+            }
+        }
+        );
 
     } 
 
