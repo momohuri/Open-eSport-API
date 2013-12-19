@@ -47,7 +47,6 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
         
         this.checkIfAlreadyExist(feedArticle, function(noArticle){
             if(noArticle){
-                
                 var cleanArticle = {};
                 cleanArticle.title      = feedArticle.title;
                 cleanArticle.titleDate  = feedArticle.titleDate;
@@ -94,14 +93,14 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
                     db.collection('articles').find({website: self.website}).toArray(function(err, articlesDuplicate){
                         articlesDuplicate.forEach(function(articleDuplicate){
                             if(articleDuplicate.link.indexOf(id_url) != -1){
-                                console.log("article removed: " + articleDuplicate.title);
+                                // console.log("article removed: " + articleDuplicate.title);
                                 db.collection('articles').remove({link: articleDuplicate.link})
+                                callback(true);
                             }
                         })
-                        callback(true);
                     })
                 }
-
+                else callback(true);
                 //Suppression des articles avec le même URL
                 // db.collection('articles').remove({
                 //     link: article.link
@@ -214,7 +213,7 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
             }
             else
             {
-                console.log("new article: " + saved[0].title);
+                console.log("new article from " + website + ": " + saved[0].title);
             }
         }
         );

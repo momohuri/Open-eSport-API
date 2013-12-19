@@ -10,7 +10,7 @@ requirejs(['api', 'express', 'mongoconfig', 'routes'], function(api, express, mo
 	// var db 				= mongo.db;
 	var app 			= express();
 	
-	var port = 80;
+	var port = 5000;
 	var mongodb = mongo.init();
 	
 
