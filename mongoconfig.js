@@ -26,11 +26,11 @@ define(['mongodb', 'feeds_cron'], function(mongo, feeds_cron){
 			    Db = mongo.Db,
 			    BSON = mongo.BSONPure;
 			 
-			var server = new Server('ds061518.mongolab.com', 61518, {journal: false, fsync: false, w: 1, auto_reconnect: true});
-			db = new Db('nodejitsu_aereivir', server);
+			var server = new Server('ds057548.mongolab.com', 57548, {journal: false, fsync: false, w: 1, auto_reconnect: true});
+			db = new Db('oeprod', server);
 			 
 			db.open(function(err, client) {
-				client.authenticate('nodejitsu_aereivir', '3ldc0h9f7h3uf52bi2mqe0tafj', function(err, success) {
+				client.authenticate('openesport', 'oe13pwd', function(err, success) {
 				    if(!err) {
 				        console.log("Connected to 'openesport' database");
 				        feeds_cron.init();
