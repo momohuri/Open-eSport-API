@@ -75,7 +75,7 @@ define([], function(){
 		
 		for(var i = 0 ; i < websites.length ; i++){
 			if(game === 'others'){
-				db.collection('articles').find({ $and: [{ website: websites[i] }, { category: { $nin: games } }] }).sort({ pubDate: -1 }).limit(40).toArray(function(err, articles){
+				db.collection('articles').find({ $and: [{ website: websites[i] }, { category: { $nin: games } }] }).sort({ pubDate: -1 }).limit(12).toArray(function(err, articles){
 					if(!err) {
 						count++;
 						allArticles = allArticles.concat(articles);
@@ -87,7 +87,7 @@ define([], function(){
 				});
 			}
 			else{
-				db.collection('articles').find({ $and: [{ website: websites[i] }, { category: game } ]}).sort({ pubDate: -1 }).limit(40).toArray(function(err, articles){
+				db.collection('articles').find({ $and: [{ website: websites[i] }, { category: game } ]}).sort({ pubDate: -1 }).limit(12).toArray(function(err, articles){
 					if(!err) {
 						count++;
 						allArticles = allArticles.concat(articles);
