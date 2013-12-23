@@ -90,7 +90,7 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
                     article.pubDate = moment(date, 'DD MMM YYYY, H:mm', 'en').toDate();
                 }
 
-                article.titleDate = article.title + "-" + article.pubDate;
+                article.titleDate = article.title + "-" + article.link;
 
                 self.checkIfAlreadyExist(article, function(){
                     self.saveArticle(article, self.website, self.language, self.game);
@@ -120,7 +120,7 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
                     article.pubDate = moment(date, 'DD MMM YYYY, H:mm', 'en').toDate();
                 }
 
-                article.titleDate = article.title + "-" + article.pubDate;
+                article.titleDate = article.title + "-" + article.link;
 
                 self.checkIfAlreadyExist(article, function(){
                     self.saveArticle(article, self.website, self.language, self.game);
@@ -137,11 +137,7 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
             titleDate: article.titleDate
         }, function(error, articleFound){
             if(error) console.log("Error");
-            else if(!articleFound || typeof articleFound == 'undefined'){
-                //Suppression des articles avec le même URL
-                db.collection('articles').remove({
-                    link: article.link
-                });
+            else if(!articleFound || typeof articleFound === 'undefined'){
                 callback();
             }
         });
@@ -168,7 +164,7 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
             }
             else
             {
-                // console.log("new article from " + website + ": " + saved[0].title);
+                console.log("new article from " + website + ": " + saved[0].title);
             }
         }
         );
