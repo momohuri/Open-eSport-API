@@ -63,7 +63,6 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
 
     Feed.prototype.checkIfAlreadyExist = function(article, callback){
         var self = this;
-        
         db.collection('articles').findOne({
             $or: [ 
                 { $and: [ { titleDate: article.titleDate }, { category: article.category } ] }, 
@@ -91,12 +90,17 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
 
                 if(id_url != null){
                     db.collection('articles').find({website: self.website}).toArray(function(err, articlesDuplicate){
+                        var length = 0;
                         articlesDuplicate.forEach(function(articleDuplicate){
+                            length++;
                             if(articleDuplicate.link.indexOf(id_url) != -1){
                                 // console.log("article removed: " + articleDuplicate.title);
                                 db.collection('articles').remove({link: articleDuplicate.link})
                                 callback(true);
                             }
+
+                            if(length === articlesDuplicate.length)
+                                callback(true);
                         })
                     })
                 }
@@ -213,6 +217,7 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
             }
             else
             {
+                // if(website === "Millenium")
                 console.log("new article from " + website + ": " + saved[0].title);
             }
         }

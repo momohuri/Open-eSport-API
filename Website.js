@@ -168,7 +168,7 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
             }
             else
             {
-                console.log("new article from " + website + ": " + saved[0].title);
+                // console.log("new article from " + website + ": " + saved[0].title);
             }
         }
         );
