@@ -132,7 +132,6 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
 
     Website.prototype.checkIfAlreadyExist = function(article, callback){
         var self = this;
-
         db.collection('articles').findOne({
             titleDate: article.titleDate
         }, function(error, articleFound){

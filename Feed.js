@@ -90,18 +90,12 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
 
                 if(id_url != null){
                     db.collection('articles').find({website: self.website}).toArray(function(err, articlesDuplicate){
-                        var length = 0;
                         articlesDuplicate.forEach(function(articleDuplicate){
-                            length++;
                             if(articleDuplicate.link.indexOf(id_url) != -1){
-                                // console.log("article removed: " + articleDuplicate.title);
                                 db.collection('articles').remove({link: articleDuplicate.link})
-                                callback(true);
                             }
-
-                            if(length === articlesDuplicate.length)
-                                callback(true);
                         })
+                        callback(true);
                     })
                 }
                 else callback(true);
