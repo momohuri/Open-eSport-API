@@ -137,7 +137,9 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
         }, function(error, articleFound){
             if(error) console.log("Error");
             else if(!articleFound || typeof articleFound === 'undefined'){
-                callback();
+                db.collection('articles').remove({link: article.link}, function(er, numberOfRemovedDocs){
+                    callback();
+                });
             }
         });
     }
