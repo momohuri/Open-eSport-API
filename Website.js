@@ -147,44 +147,48 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
     }
 
     Website.prototype.saveArticle = function(article, website, language, game){
+        var falseDate = false;
+
         if(article.pubDate > moment().toDate())
-            article.pubDate = moment().toDate();
-                
-        db.collection('articles').update(
-        {
-            title:      article.title,
-            website:    website,
-            category:   game 
-        },
-        { $set:
+            falseDate = true;
+
+        if(!falseDate){
+            db.collection('articles').update(
             {
-                title:          article.title, 
-                website:        website,
-                category:       game,
-                link:           article.link,
-                pubDate:        article.pubDate,
-                author:         article.author,
-                language:       language,
-                titleDate:      article.titleDate
+                title:      article.title,
+                website:    website,
+                category:   game 
+            },
+            { $set:
+                {
+                    title:          article.title, 
+                    website:        website,
+                    category:       game,
+                    link:           article.link,
+                    pubDate:        article.pubDate,
+                    author:         article.author,
+                    language:       language,
+                    titleDate:      article.titleDate
+                }
+            },
+            {
+                upsert: true
             }
-        },
-        {
-            upsert: true
+            // ,function(error, saved)
+            // {
+            //     if(error || !saved)
+            //     {
+            //         console.log("FAILED " + website);
+            //         console.log("ERROR: " + error);
+            //         console.log("save: " + saved);
+            //     }
+            //     else
+            //     {
+            //         console.log("new article from " + website + ": " + saved[0].title);
+            //     }
+            // }
+            );
         }
-        // ,function(error, saved)
-        // {
-        //     if(error || !saved)
-        //     {
-        //         console.log("FAILED " + website);
-        //         console.log("ERROR: " + error);
-        //         console.log("save: " + saved);
-        //     }
-        //     else
-        //     {
-        //         console.log("new article from " + website + ": " + saved[0].title);
-        //     }
-        // }
-        );
     } 
 
     return Website;
