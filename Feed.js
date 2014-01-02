@@ -45,20 +45,34 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
         feedArticle.titleDate = feedArticle.title + "-" + feedArticle.pubDate;
         feedArticle.category = self.setCategory(feedArticle);
         
-        this.checkIfAlreadyExist(feedArticle, function(noArticle){
-            if(noArticle){
-                var cleanArticle = {};
-                cleanArticle.title      = feedArticle.title;
-                cleanArticle.titleDate  = feedArticle.titleDate;
-                cleanArticle.category   = feedArticle.category;
+        if(self.website === "Esport Actu" || self.website === "Millenium" || self.website === "Team aAa"){
+            this.checkIfAlreadyExist(feedArticle, function(noArticle){
+                if(noArticle){
+                    var cleanArticle = {};
+                    cleanArticle.title      = feedArticle.title;
+                    cleanArticle.titleDate  = feedArticle.titleDate;
+                    cleanArticle.category   = feedArticle.category;
 
-                cleanArticle.author     = self.setAuthor(feedArticle);
-                cleanArticle.pubDate    = self.setPubDate(feedArticle);
-                cleanArticle.link       = self.setUrl(feedArticle);
+                    cleanArticle.author     = self.setAuthor(feedArticle);
+                    cleanArticle.pubDate    = self.setPubDate(feedArticle);
+                    cleanArticle.link       = self.setUrl(feedArticle);
 
-                callback(cleanArticle, self.website, self.language);
-            }
-        });
+                    callback(cleanArticle, self.website, self.language);
+                }
+            });
+        }
+        else{
+            var cleanArticle = {};
+            cleanArticle.title      = feedArticle.title;
+            cleanArticle.titleDate  = feedArticle.titleDate;
+            cleanArticle.category   = feedArticle.category;
+
+            cleanArticle.author     = self.setAuthor(feedArticle);
+            cleanArticle.pubDate    = self.setPubDate(feedArticle);
+            cleanArticle.link       = self.setUrl(feedArticle);
+
+            callback(cleanArticle, self.website, self.language);
+        }
     }
 
     Feed.prototype.checkIfAlreadyExist = function(article, callback){
@@ -191,30 +205,44 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
         // console.log("title: " + article.titleDate);
         // console.log("title: " + language);
 
-        db.collection('articles').insert({ 
-            title:          article.title, 
-            website:        website,
-            category:       article.category,
-            link:           article.link,
-            pubDate:        article.pubDate,
-            author:         article.author,
-            language:       language,
-            titleDate:      article.titleDate
-        }
-        ,function(error, saved)
+        if(article.pubDate > moment().toDate())
+            article.pubDate = moment().toDate();
+                
+        db.collection('articles').update(
         {
-            if(error || !saved)
+            title:      article.title,
+            website:    website,
+            category:   article.category 
+        },
+        { $set:
             {
-                console.log("FAILED " + website);
-                console.log("ERROR: " + error);
-                console.log("save: " + saved);
+                title:          article.title, 
+                website:        website,
+                category:       article.category,
+                link:           article.link,
+                pubDate:        article.pubDate,
+                author:         article.author,
+                language:       language,
+                titleDate:      article.titleDate
             }
-            else
-            {
-                // if(website === "Millenium")
-                console.log("new article from " + website + ": " + saved[0].title);
-            }
+        },
+        {
+            upsert: true
         }
+        // ,function(error, saved)
+        // {
+        //     if(error || !saved)
+        //     {
+        //         console.log("FAILED " + website);
+        //         console.log("ERROR: " + error);
+        //         console.log("save: " + saved);
+        //     }
+        //     else
+        //     {
+        //         // if(website === "Millenium")
+        //         // console.log("new article from " + website + ": " + saved[0].title);
+        //     }
+        // }
         );
 
     } 

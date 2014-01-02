@@ -163,7 +163,7 @@ define([], function(){
 
 
 		removeAll: function(req, res) {
-			db.collection('articles').remove({ $or: [{website: "Esports Heaven" }, {website: "Thunderbot" }] });
+			db.collection('articles').remove({website: "Esports Heaven" });
 			res.send(200);
 		}
 

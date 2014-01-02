@@ -35,9 +35,9 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
                 var currentHour = moment().format('H:mm:ss', 'fr');
                 article.pubDate = moment(dateArray + " " + currentHour, 'DD MMM YYYY H:mm:ss', 'fr').toDate();
                 article.titleDate = article.title + "-" + article.link;
-                self.checkIfAlreadyExist(article, function(){
+                // self.checkIfAlreadyExist(article, function(){
                     self.saveArticle(article, self.website, self.language, self.game);
-                });
+                // });
             });
         });
     }
@@ -56,9 +56,9 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
                 var currentHour = moment().format('H:mm:ss', 'fr');
                 article.pubDate = moment(date + " " + currentHour, 'DD MMM YYYY H:mm:ss', 'fr').toDate();
                 article.titleDate = article.title + "-" + article.link;
-                self.checkIfAlreadyExist(article, function(){
+                // self.checkIfAlreadyExist(article, function(){
                     self.saveArticle(article, self.website, self.language, self.game);
-                });
+                // });
             });
         });
     }
@@ -92,9 +92,9 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
 
                 article.titleDate = article.title + "-" + article.link;
 
-                self.checkIfAlreadyExist(article, function(){
+                // self.checkIfAlreadyExist(article, function(){
                     self.saveArticle(article, self.website, self.language, self.game);
-                });
+                // });
             });
 
             var headLinks = $('.headlines>.body>.filter_feature>h1>a');
@@ -122,9 +122,9 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
 
                 article.titleDate = article.title + "-" + article.link;
 
-                self.checkIfAlreadyExist(article, function(){
+                // self.checkIfAlreadyExist(article, function(){
                     self.saveArticle(article, self.website, self.language, self.game);
-                });
+                // });
             });
             
         });
@@ -138,6 +138,8 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
             if(error) console.log("Error");
             else if(!articleFound || typeof articleFound === 'undefined'){
                 db.collection('articles').remove({link: article.link}, function(er, numberOfRemovedDocs){
+                    if(self.website === "Esports Heaven")
+                        console.log("removed: " + article.title);
                     callback();
                 });
             }
@@ -145,29 +147,43 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
     }
 
     Website.prototype.saveArticle = function(article, website, language, game){
-        db.collection('articles').insert({ 
-            title:          article.title, 
-            website:        website,
-            category:       game,
-            link:           article.link,
-            pubDate:        article.pubDate,
-            author:         article.author,
-            language:       language,
-            titleDate:      article.titleDate
-        }
-        ,function(error, saved)
+        if(article.pubDate > moment().toDate())
+            article.pubDate = moment().toDate();
+                
+        db.collection('articles').update(
         {
-            if(error || !saved)
+            title:      article.title,
+            website:    website,
+            category:   game 
+        },
+        { $set:
             {
-                console.log("FAILED " + website);
-                console.log("ERROR: " + error);
-                console.log("save: " + saved);
+                title:          article.title, 
+                website:        website,
+                category:       game,
+                link:           article.link,
+                pubDate:        article.pubDate,
+                author:         article.author,
+                language:       language,
+                titleDate:      article.titleDate
             }
-            else
-            {
-                console.log("new article from " + website + ": " + saved[0].title);
-            }
+        },
+        {
+            upsert: true
         }
+        // ,function(error, saved)
+        // {
+        //     if(error || !saved)
+        //     {
+        //         console.log("FAILED " + website);
+        //         console.log("ERROR: " + error);
+        //         console.log("save: " + saved);
+        //     }
+        //     else
+        //     {
+        //         console.log("new article from " + website + ": " + saved[0].title);
+        //     }
+        // }
         );
     } 
 
