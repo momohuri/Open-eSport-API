@@ -35,9 +35,9 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
                 var currentHour = moment().format('H:mm:ss', 'fr');
                 article.pubDate = moment(dateArray + " " + currentHour, 'DD MMM YYYY H:mm:ss', 'fr').toDate();
                 article.titleDate = article.title + "-" + article.link;
-                // self.checkIfAlreadyExist(article, function(){
+                self.checkIfAlreadyExist(article, function(){
                     self.saveArticle(article, self.website, self.language, self.game);
-                // });
+                });
             });
         });
     }
