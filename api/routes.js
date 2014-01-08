@@ -1,4 +1,4 @@
-define(['api'], function(api){
+define(['./api'], function(api){
 
 	return {
 
@@ -12,7 +12,7 @@ define(['api'], function(api){
 			app.get('/posts/mobile/', api.findAllMobile);
 			app.get('/posts/mobile', api.findAllMobile);
 			app.get('/posts/web', api.findAll);
-			app.get('/remove/all', api.removeAll);
+			// app.get('/remove/all', api.removeAll);
 		}
 
 	}

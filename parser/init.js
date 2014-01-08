@@ -1,13 +1,15 @@
-define(['cron', 'Feed', 'Website'], function(cron, Feed, Website){
+define(['cron', './Feed', './Website'], function(cron, Feed, Website){
 	
 	return {
 
 		init: function(){
 			var self = this;
 			var cronJob = cron.CronJob;
-			// console.log(cronJob);
+
+			self.launchFeeds();
+			console.log("First parse feeds");
     		new cronJob('0 */1 * * * *', function(){
-				console.log("launch cron");
+				console.log("Parse feeds");
 				self.launchFeeds();
 			}, null, true);
 		},
