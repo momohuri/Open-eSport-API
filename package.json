@@ -2,7 +2,7 @@
 	"name": "open-esport",
 	"subdomain": "openesport",
 	"scripts": {
-		"start": "node app.js"
+		"start": "node core/app.js"
 	},
 	"dependencies": {
 		"cron": "1.0.1",
