@@ -58,12 +58,6 @@ define([], function(){
 			db.collection('articles').find({website: req.params.website, categories: req.params.game}).sort({ pubDate: -1 }).limit(20).toArray(function(err, articles){
 				if(!err) res.send(articles);
 			});
-		},
-
-
-		removeAll: function(req, res) {
-			db.collection('articles').remove();
-			res.send(200);
 		}
 
 	}
