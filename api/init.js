@@ -1,5 +1,3 @@
-var mongo = require('mongodb');
- 
 define(['express', '../api/routes'], function(express, routes){
 	return {
 		

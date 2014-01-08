@@ -1,6 +1,4 @@
-//Modules
 var requirejs 		= require('requirejs');
-var express 		= require('express');
 
 requirejs.config({
     nodeRequire: require

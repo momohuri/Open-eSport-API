@@ -1,5 +1,3 @@
-var mongo = require('mongodb');
- 
 define(['mongodb'], function(mongo){
 	return {
 		init: function(callback){
