@@ -13,6 +13,7 @@ define(['cron', 'Feed', 'Website'], function(cron, Feed, Website){
 		},
 
 		launchFeeds: function(){
+			// new Feed("SFGate", "sfgate", "http://www.sfgate.com/rss/feed/Entertainment-530.php", "en", null);
 			new Website("Thunderbot", "thunderbot", "http://www.thunderbot.gg", "fr", "lol");
 			new Website("Esports Heaven", "esportsheaven", "http://www.esportsheaven.com/index/filter/LoL", "en", "lol");
 			new Website("Esports Heaven", "esportsheaven", "http://www.esportsheaven.com/index/filter/Starcraft", "en", "sc2");
