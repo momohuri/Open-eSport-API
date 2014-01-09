@@ -25,7 +25,7 @@ define([ './Feed', './Website', 'fs'], function (Feed, Website, fs) {
 //                            new Website(url.name, url.shortName, url.url, url.lang, url.game);
                             break;
                         case 'feed':
-                            new Feed(url.name, url.shortName, url.url, url.lang, url.game, url.theme);
+                            new Feed(url.name, url.id, url.url, url.language, url.game, url.theme);
                             break;
                     }
 

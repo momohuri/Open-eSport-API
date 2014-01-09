@@ -29,12 +29,20 @@ define(['feedparser', 'request', 'moment', 'iconv','./constructEsportArticle'], 
     Feed.prototype.shapeArticle = function (feedArticle, callback) {
         var self = this;
 
-        if(self.theme === "classic")
+        if(self.theme === "classic"){
             feedArticle.pubDate = moment(feedArticle.pubDate).toDate();
-        else if(self.theme === "esport")
-            feedArticle = constructEsportArticle(self, feedArticle);
+            if(typeof feedArticle.category === 'undefined')
+                feedArticle.category = "nocategory";
 
-        callback(feedArticle, self.website, self.language);
+            callback(feedArticle, self.website, self.language);
+        }
+        else if(self.theme === "esport"){
+            constructEsportArticle(self, feedArticle, function(esportArticle){
+                callback(esportArticle, self.website, self.language);
+            });
+        }
+
+
 
     };
 

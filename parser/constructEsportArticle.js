@@ -101,28 +101,25 @@ define([], function () {
                                 db.collection('articles').remove({link: articleDuplicate.link})
                             }
                         })
-                        callback(true);
+                        callback();
                     })
                 }
-                else callback(true);
+                else callback();
             }
-            else callback(false);
         });
     }
 
-    return function (self, feedArticle) {
+    return function (self, feedArticle, callback) {
         feedArticle.category = setCategory(self, feedArticle);
         feedArticle.author = setAuthor(self, feedArticle.author);
         feedArticle.pubDate = setPubDate(self, feedArticle.pubDate);
         feedArticle.link = setUrl(self, feedArticle.link);
 
         if(self.website === "Esport Actu" || self.website === "Esport Actu" || self.website === "Esport Actu"){
-            checkIfAlreadyExist(self, feedArticle, function(isReturning){
-                if(isReturning)
-                    return feedArticle;
+            checkIfAlreadyExist(self, feedArticle, function(){
+                callback(feedArticle);
             })
         }
-
-        else return feedArticle;
+        else callback(feedArticle);
     }
 });
