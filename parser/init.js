@@ -15,14 +15,14 @@ define([ './Feed', './Website', 'fs'], function (Feed, Website, fs) {
 
         launchFeeds: function () {
 
-            fs.readFile('./parser/urls.json', 'utf8', function (err,file) {
+            fs.readFile('./resources/websites.json', 'utf8', function (err,file) {
                 if (err) throw err;
                 var urls = JSON.parse(file);
                 urls.forEach(function (url) {
                     //le switch case peut etre evite si on fait un constructeur commum pour les deux avec un parametre type
                     switch (url.type) {
                         case 'website':
-                            //new Website(url.name, url.shortName, url.url, url.lang, url.game);
+//                            new Website(url.name, url.shortName, url.url, url.lang, url.game);
                             break;
                         case 'feed':
                             new Feed(url.name, url.shortName, url.url, url.lang, url.game);
