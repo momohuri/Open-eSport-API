@@ -41,9 +41,6 @@ define(['feedparser', 'request', 'moment', 'iconv','./constructEsportArticle'], 
                 callback(esportArticle, self.website, self.language);
             });
         }
-
-
-
     };
 
     Feed.prototype.saveArticle = function (article, website, language) {
