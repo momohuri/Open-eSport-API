@@ -1,0 +1,282 @@
+[
+  {
+    "name": "O Gaming",
+    "id": "ogaming",
+    "url": "http://www.ogaming.tv/rss.xml",
+    "language": "fr",
+    "game": null,
+    "rule": null
+  },
+  {
+    "name": "Team aAa",
+    "id": "teamaaa",
+    "url": "http://www.team-aaa.com/xml/news-rss-all.xml",
+    "language": "fr",
+    "game": null,
+    "rule": null
+  },
+  {
+    "name": "TeamLiquid",
+    "id": "teamliquid",
+    "url": "http://www.teamliquid.net/rss/news.xml",
+    "language": "en",
+    "game": null,
+    "rule": null
+  },
+  {
+    "name": "VaKarM",
+    "id": "vakarm",
+    "url": "http://feeds2.feedburner.com/vakarm",
+    "language": "fr",
+    "game": "csgo",
+    "rule": null
+  },
+  {
+    "name": "VaKarM",
+    "id": "vakarm",
+    "url": "http://feeds2.feedburner.com/vakarm_coverage",
+    "language": "fr",
+    "game": "csgo",
+    "rule": null
+  },
+  {
+    "name": "HLTV",
+    "id": "hltv",
+    "url": "http://www.hltv.org/news.rss.php",
+    "language": "en",
+    "game": "csgo",
+    "rule": null
+  },
+  {
+    "name": "Esport Actu",
+    "id": "esportactu",
+    "url": "http://www.esportactu.fr/rss.xml",
+    "language": "fr",
+    "game": null,
+    "rule": null
+  },
+  {
+    "name": "dota2fr",
+    "id": "dota2fr",
+    "url": "http://www.dota2.fr/rss/feed/news",
+    "language": "fr",
+    "game": "dota2",
+    "rule": null
+  },
+  {
+    "name": "Shoryuken",
+    "id": "shoryuken",
+    "url": "http://shoryuken.com/feed/",
+    "language": "en",
+    "game": "versus",
+    "rule": null
+  },
+  {
+    "name": "ESReality",
+    "id": "esreality",
+    "url": "http://www.esreality.com/rss_xml.php",
+    "language": "en",
+    "game": "ql",
+    "rule": null
+  },
+  {
+    "name": "IEWT",
+    "id": "iewt",
+    "url": "http://www.inesportwetrust.com/feed",
+    "language": "fr",
+    "game": null,
+    "rule": null
+  },
+  {
+    "name": "joinDOTA",
+    "id": "joindota",
+    "url": "http://www.joindota.com/feeds/news",
+    "language": "en",
+    "game": "dota2",
+    "rule": null
+  },
+  {
+    "name": "Reddit",
+    "id": "reddit",
+    "url": "http://www.reddit.com/r/starcraft/.rss",
+    "language": "en",
+    "game": "sc2",
+    "rule": null
+  },
+  {
+    "name": "Reddit",
+    "id": "reddit",
+    "url": "http://www.reddit.com/r/dota2/.rss",
+    "language": "en",
+    "game": "dota2",
+    "rule": null
+  },
+  {
+    "name": "Reddit",
+    "id": "reddit",
+    "url": "http://www.reddit.com/r/leagueoflegends/.rss",
+    "language": "en",
+    "game": "lol",
+    "rule": null
+  },
+  {
+    "name": "Reddit",
+    "id": "reddit",
+    "url": "http://www.reddit.com/r/GlobalOffensive/.rss",
+    "language": "en",
+    "game": "csgo",
+    "rule": null
+  },
+  {
+    "name": "Reddit",
+    "id": "reddit",
+    "url": "http://www.reddit.com/r/Fighters/.rss",
+    "language": "en",
+    "game": "versus",
+    "rule": null
+  },
+  {
+    "name": "Reddit",
+    "id": "reddit",
+    "url": "http://www.reddit.com/r/quakelive/.rss",
+    "language": "en",
+    "game": "ql",
+    "rule": null
+  },
+  {
+    "name": "Reddit",
+    "id": "reddit",
+    "url": "http://www.reddit.com/r/hearthstone/.rss",
+    "language": "en",
+    "game": "hearthstone",
+    "rule": null
+  },
+  {
+    "name": "Millenium",
+    "id": "millenium",
+    "url": "http://www.millenium.org/index.php?siteUrl=starcraft-2&themeUrl=accueil&module=actualite&action=actualite:rss",
+    "language": "fr",
+    "game": "sc2",
+    "rule": null
+  },
+  {
+    "name": "Millenium",
+    "id": "millenium",
+    "url": "http://www.millenium.org/index.php?siteUrl=dota-2&themeUrl=accueil&module=actualite&action=actualite:rss",
+    "language": "fr",
+    "game": "dota2",
+    "rule": null
+  },
+  {
+    "name": "Millenium",
+    "id": "millenium",
+    "url": "http://www.millenium.org/index.php?siteUrl=lol&themeUrl=accueil&module=actualite&action=actualite:rss",
+    "language": "fr",
+    "game": "lol",
+    "rule": null
+  },
+  {
+    "name": "Millenium",
+    "id": "millenium",
+    "url": "http://www.millenium.org/index.php?siteUrl=cs-go&themeUrl=accueil&module=actualite&action=actualite:rss",
+    "language": "fr",
+    "game": "csgo",
+    "rule": null
+  },
+  {
+    "name": "Millenium",
+    "id": "millenium",
+    "url": "http://www.millenium.org/index.php?siteUrl=hearthstone-heroes-of-warcraft&themeUrl=accueil&module=actualite&action=actualite:rss",
+    "language": "fr",
+    "game": "hearthstone",
+    "rule": null
+  },
+  {
+    "name": "onGamers",
+    "id": "ongamers",
+    "url": "http://www.ongamers.com/starcraft-2/6000-3/rss/",
+    "language": "en",
+    "game": "sc2",
+    "rule": null
+  },
+  {
+    "name": "onGamers",
+    "id": "ongamers",
+    "url": "http://www.ongamers.com/league-of-legends/6000-2/rss/",
+    "language": "en",
+    "game": "lol",
+    "rule": null
+  },
+  {
+    "name": "onGamers",
+    "id": "ongamers",
+    "url": "http://www.ongamers.com/dota-2/6000-1/rss/",
+    "language": "en",
+    "game": "dota2",
+    "rule": null
+  },
+  {
+    "name": "onGamers",
+    "id": "ongamers",
+    "url": "http://www.ongamers.com/counter-strike-global-offensive/6000-4/rss/",
+    "language": "en",
+    "game": "csgo",
+    "rule": null
+  },
+  {
+    "name": "onGamers",
+    "id": "ongamers",
+    "url": "http://www.ongamers.com/hearthstone/6000-7/rss/",
+    "language": "en",
+    "game": "hearthstone",
+    "rule": null
+  },
+  {
+    "name": "onGamers",
+    "id": "ongamers",
+    "url": "http://www.ongamers.com/street-fighter-iv/6000-10/rss/",
+    "language": "en",
+    "game": "versus",
+    "rule": null
+  },
+  {
+    "name": "onGamers",
+    "id": "ongamers",
+    "url": "http://www.ongamers.com/quake/6000-9/rss/",
+    "language": "en",
+    "game": "ql",
+    "rule": null
+  },
+  {
+    "name": "SK Gaming",
+    "id": "skgaming",
+    "url": "http://www.sk-gaming.com/rss/channel/lol",
+    "language": "en",
+    "game": "lol",
+    "rule": null
+  },
+  {
+    "name": "SK Gaming",
+    "id": "skgaming",
+    "url": "http://www.sk-gaming.com/rss/channel/sc2",
+    "language": "en",
+    "game": "sc2",
+    "rule": null
+  },
+  {
+    "name": "SK Gaming",
+    "id": "skgaming",
+    "url": "http://www.sk-gaming.com/rss/channel/cs",
+    "language": "en",
+    "game": "csgo",
+    "rule": null
+  },
+  {
+    "name": "Esports Express",
+    "id": "esportsexpress",
+    "url": "http://esportsexpress.com/feed/",
+    "language": "en",
+    "game": null,
+    "rule": null
+  }
+]

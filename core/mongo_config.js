@@ -1,5 +1,8 @@
+var mongo = require('mongodb');
+ 
 define(['mongodb'], function(mongo){
 	return {
+		
 		init: function(callback){
 			var Server = mongo.Server,
 			    Db = mongo.Db,

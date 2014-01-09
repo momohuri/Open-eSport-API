@@ -4,7 +4,7 @@ requirejs.config({
     nodeRequire: require
 });
 
-requirejs(['../api/init', '../parser/init', './mongo_config', ], function(api, parser, mongo){
+requirejs(['./api/init', './parser/init', './core/mongo_config', ], function(api, parser, mongo){
 	
 	mongo.init(function(){
 		parser.init();

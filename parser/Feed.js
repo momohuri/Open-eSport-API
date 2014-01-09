@@ -83,7 +83,7 @@ define(['feedparser', 'request', 'moment', 'iconv'], function(FeedParser, reques
                 { $and: [ { title: article.title }, { website: self.website }, { category: article.category } ] } 
             ]
         }, function(error, articleFound){
-            if(error) console.log("Error");
+            if(error) throw error;
             else if(!articleFound || typeof articleFound == 'undefined'){
                 var id_url = null;
 

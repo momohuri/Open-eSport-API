@@ -135,7 +135,7 @@ define(['request', 'moment', 'cheerio'], function(request, moment, cheerio){
         db.collection('articles').findOne({
             titleDate: article.titleDate
         }, function(error, articleFound){
-            if(error) console.log("Error");
+            if(error) throw error;
             else if(!articleFound || typeof articleFound === 'undefined'){
                 db.collection('articles').remove({link: article.link}, function(er, numberOfRemovedDocs){
                     if(self.website === "Esports Heaven")

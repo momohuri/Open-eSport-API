@@ -1,9 +1,22 @@
-define(['cron', './Feed', './Website'], function(cron, Feed, Website){
+define(['fs', 'cron', './Feed', './Website'], function(fs, cron, Feed, Website){
 	
 	return {
 
 		init: function(){
 			var self = this;
+
+			var jsonFile = './feeds.json';
+			fs.readFile(jsonFile, 'utf8', function (err, data) {
+				if (err) {
+					console.log('Error: ' + err);
+					return;
+				}
+
+				data = JSON.parse(data);
+
+				console.dir(data);
+			});
+
 			var cronJob = cron.CronJob;
 
 			self.launchFeeds();
