@@ -23,12 +23,11 @@ define(['feedparser', 'request', 'moment', 'iconv','./cleanArticleBasedOnRules']
                 while (feedArticle = stream.read()) {
                     self.shapeArticle(feedArticle, self.saveArticle);
                 }
-            })
+            });
     };
 
     Feed.prototype.shapeArticle = function (feedArticle, callback) {
         var self = this;
-
 
         feedArticle = cleanArticleBasedOnRules(self, feedArticle);
         feedArticle.titleDate = feedArticle.title + "-" + feedArticle.pubDate;
@@ -165,14 +164,6 @@ define(['feedparser', 'request', 'moment', 'iconv','./cleanArticleBasedOnRules']
 
 
     Feed.prototype.saveArticle = function (article, website, language) {
-        // console.log("new article from: " + website);
-        // console.log("title: " + article.title);
-        // console.log("title: " + article.category);
-        // console.log("title: " + article.link);
-        // console.log("title: " + article.pubDate);
-        // console.log("title: " + article.author);
-        // console.log("title: " + article.titleDate);
-        // console.log("title: " + language);
         var falseDate = false;
 
         if (article.pubDate > moment().toDate())
@@ -199,20 +190,20 @@ define(['feedparser', 'request', 'moment', 'iconv','./cleanArticleBasedOnRules']
                 {
                     upsert: true
                 }
-                // ,function(error, saved)
-                // {
-                //     if(error || !saved)
-                //     {
-                //         console.log("FAILED " + website);
-                //         console.log("ERROR: " + error);
-                //         console.log("save: " + saved);
-                //     }
-                //     else
-                //     {
-                //         // if(website === "Millenium")
-                //         // console.log("new article from " + website + ": " + saved[0].title);
-                //     }
-                // }
+                ,function(error, saved)
+                {
+                     if(error || !saved)
+                     {
+                         console.log("FAILED " + website);
+                         console.log("ERROR: " + error);
+                         console.log("save: " + saved);
+                     }
+                     else
+                     {
+                         // if(website === "Millenium")
+                         // console.log("new article from " + website + ": " + saved[0].title);
+                     }
+                }
             );
         }
 

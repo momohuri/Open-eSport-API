@@ -8,7 +8,6 @@ define([], function () {
         }
 
         if (self.website === "Esport Actu" || self.website === "Millenium" || self.website === "Team aAa") {
-
             cleanArticle.title = feedArticle.title;
             cleanArticle.titleDate = feedArticle.titleDate;
             cleanArticle.category = feedArticle.category;
@@ -18,7 +17,6 @@ define([], function () {
             return   cleanArticle;
 
         } else {
-
             cleanArticle.title = feedArticle.title;
             cleanArticle.titleDate = feedArticle.titleDate;
             cleanArticle.category = feedArticle.category;

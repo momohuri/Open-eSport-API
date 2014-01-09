@@ -15,7 +15,6 @@ define([ './Feed', './Website', 'fs'], function (Feed, Website, fs) {
 
         launchFeeds: function () {
 
-
             fs.readFile('./parser/urls.json', 'utf8', function (err,file) {
                 if (err) throw err;
                 var urls = JSON.parse(file);
