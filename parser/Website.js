@@ -122,6 +122,8 @@ define(['request', 'moment', 'cheerio'], function (request, moment, cheerio) {
                 self.saveArticle(article, self.website, self.language, self.game);
 
             });
+        });
+    };
 
     Website.prototype.checkIfAlreadyExist = function(article, callback){
         var self = this;
