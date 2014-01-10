@@ -1,4 +1,4 @@
-define(['feedparser', 'request', 'moment', 'iconv','./constructEsportArticle'], function (FeedParser, request, moment, Iconv, constructEsportArticle) {
+define(['feedparser', 'request', 'moment', 'iconv', './constructEsportArticle'], function (FeedParser, request, moment, Iconv, constructEsportArticle) {
 
     function Feed(website, websiteShort, url, language, game, theme) {
         this.website = website;
@@ -12,7 +12,6 @@ define(['feedparser', 'request', 'moment', 'iconv','./constructEsportArticle'], 
 
     Feed.prototype.getArticles = function () {
         var self = this;
-
         request(this.url)
             .pipe(new FeedParser())
             .on('error', function (error) {
@@ -28,16 +27,14 @@ define(['feedparser', 'request', 'moment', 'iconv','./constructEsportArticle'], 
 
     Feed.prototype.shapeArticle = function (feedArticle, callback) {
         var self = this;
-
-        if(self.theme === "classic"){
+        if (self.theme === "classic") {
             feedArticle.pubDate = moment(feedArticle.pubDate).toDate();
-            if(typeof feedArticle.category === 'undefined')
+            if (typeof feedArticle.category === 'undefined')
                 feedArticle.category = "nocategory";
-
             callback(feedArticle, self.website, self.language);
         }
-        else if(self.theme === "esport"){
-            constructEsportArticle(self, feedArticle, function(esportArticle){
+        else if (self.theme === "esport") {
+            constructEsportArticle(self, feedArticle, function (esportArticle) {
                 callback(esportArticle, self.website, self.language);
             });
         }
@@ -50,38 +47,28 @@ define(['feedparser', 'request', 'moment', 'iconv','./constructEsportArticle'], 
             falseDate = true;
 
         if (!falseDate) {
+
+            var toInsert = article;
+            toInsert.language = language;
+            toInsert.website = website;
+
             db.collection('articles').update(
                 {
                     title: article.title,
                     website: website,
                     category: article.category
                 },
-                { $set: {
-                    title: article.title,
-                    website: website,
-                    category: article.category,
-                    link: article.link,
-                    pubDate: article.pubDate,
-                    author: article.author,
-                    language: language,
-                }
-                },
-                {
-                    upsert: true
-                }
-                ,function(error, saved)
-                {
-                     if(error || !saved)
-                     {
-                         console.log("FAILED " + website);
-                         console.log("ERROR: " + error);
-                         console.log("save: " + saved);
-                     }
-                     else
-                     {
-                         // if(website === "Millenium")
-                         // console.log("new article from " + website + ": " + saved[0].title);
-                     }
+                { $set: toInsert},
+                { upsert: true},
+                function (error, saved) {
+                    if (error || !saved) {
+                        console.log("FAILED " + website);
+                        console.log("ERROR: " + error);
+                        console.log("save: " + saved);
+                    }
+                    else {
+                         console.log("new article from " + website + ": " + saved[0].title);
+                    }
                 }
             );
         }

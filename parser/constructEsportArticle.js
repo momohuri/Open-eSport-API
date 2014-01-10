@@ -55,7 +55,7 @@ define([], function () {
         else if (self.website === "Team aAa")
             pubDate = moment(pubDate).add('hours', 2).toDate();
         else
-            var pubDate = moment(pubDate).toDate();
+             pubDate = moment(pubDate).toDate();
 
         return pubDate;
     }

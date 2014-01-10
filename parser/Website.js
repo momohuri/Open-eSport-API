@@ -125,23 +125,6 @@ define(['request', 'moment', 'cheerio'], function (request, moment, cheerio) {
         });
     };
 
-    Website.prototype.checkIfAlreadyExist = function(article, callback){
-        var self = this;
-        db.collection('articles').findOne({
-            titleDate: article.titleDate
-        }, function(error, articleFound){
-            if(error) throw error;
-            else if(!articleFound || typeof articleFound === 'undefined'){
-                db.collection('articles').remove({link: article.link}, function(er, numberOfRemovedDocs){
-                    if(self.website === "Esports Heaven")
-                        console.log("removed: " + article.title);
-                    callback();
-                });
-            }
-        });
-    }
-
-
     Website.prototype.saveArticle = function (article, website, language, game) {
         var falseDate = false;
 
@@ -149,38 +132,28 @@ define(['request', 'moment', 'cheerio'], function (request, moment, cheerio) {
             falseDate = true;
 
         if (!falseDate) {
+
+            var toInsert = article;
+            toInsert.language = language;
+            toInsert.website = website;
+            toInsert.category = game;
+
             db.collection('articles').update(
                 {
                     title: article.title,
                     website: website,
                     category: game
                 },
-                { $set: {
-                    title: article.title,
-                    website: website,
-                    category: game,
-                    link: article.link,
-                    pubDate: article.pubDate,
-                    author: article.author,
-                    language: language,
-                    titleDate: article.titleDate
-                }
-                },
-                {
-                    upsert: true
-                }
-                ,function(error, saved)
-                {
-                    if(error || !saved)
-                     {
-                         console.log("FAILED " + website);
-                         console.log("ERROR: " + error);
-                         console.log("save: " + saved);
-                     }
-                     else
-                     {
-                         console.log("new article from " + website + ": " + saved[0].title);
-                     }
+                { $set: toInsert }, { upsert: true},
+                function (error, saved) {
+                    if (error || !saved) {
+                        console.log("FAILED " + website);
+                        console.log("ERROR: " + error);
+                        console.log("save: " + saved);
+                    }
+                    else {
+                        console.log("new article from " + website + ": " + saved[0].title);
+                    }
                 }
             );
         }
