@@ -12,7 +12,7 @@ requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, 
     mongo.connect(conf.mongDB, function (err, database) {
         if (err) throw err;
         db = database;
-        console.log("Connected to 'openesport' database");
+        console.log("Connected to "+db.databaseName+" database");
 
 
         parser.init();
@@ -21,8 +21,8 @@ requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, 
     });
 
 
-    process.on('uncaughtException', function (err) {
-        console.error(err);
-        console.log("keeping node alive");
-    });
+//    process.on('uncaughtException', function (err) {
+//        console.error(err);
+//        console.log("keeping node alive");
+//    });
 });

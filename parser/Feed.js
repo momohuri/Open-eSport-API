@@ -1,12 +1,12 @@
-define(['feedparser', 'request', 'moment', 'iconv', './constructEsportArticle'], function (FeedParser, request, moment, Iconv, constructEsportArticle) {
+define(['feedparser', 'request', 'moment', 'iconv', './constructArticle'], function (FeedParser, request, moment, Iconv, constructArticle) {
 
-    function Feed(website, websiteShort, url, language, game, theme) {
-        this.website = website;
-        this.websiteShort = websiteShort;
-        this.url = url;
-        this.language = language;
-        this.game = game;
-        this.theme = theme;
+    function Feed(url) {
+        this.website = url.name;
+        this.websiteShort = url.websiteShort;
+        this.url = url.url;
+        this.language = url.language;
+        this.game = url.game;
+        this.theme = url.theme;
         this.getArticles();
     }
 
@@ -20,27 +20,24 @@ define(['feedparser', 'request', 'moment', 'iconv', './constructEsportArticle'],
             .on('readable', function () {
                 var stream = this, item;
                 while (feedArticle = stream.read()) {
-                    self.shapeArticle(feedArticle, self.saveArticle);
+                    var article = self.shapeArticle(feedArticle);
+                    self.saveArticle(article);
                 }
             });
     };
 
-    Feed.prototype.shapeArticle = function (feedArticle, callback) {
-        var self = this;
-        if (self.theme === "classic") {
-            feedArticle.pubDate = moment(feedArticle.pubDate).toDate();
-            if (typeof feedArticle.category === 'undefined')
-                feedArticle.category = "nocategory";
-            callback(feedArticle, self.website, self.language);
-        }
-        else if (self.theme === "esport") {
-            constructEsportArticle(self, feedArticle, function (esportArticle) {
-                callback(esportArticle, self.website, self.language);
-            });
-        }
+    Feed.prototype.shapeArticle = function (feedArticle) {
+        var article = {
+            title: feedArticle.title,
+            category: constructArticle.setCategory(this, feedArticle),
+            author: constructArticle.setAuthor(this, feedArticle.author),
+            pubDate: constructArticle.setPubDate(this, feedArticle.pubDate),
+            url: constructArticle.setUrl(this, feedArticle.link)
+        };
+        return article;
     };
 
-    Feed.prototype.saveArticle = function (article, website, language) {
+    Feed.prototype.saveArticle = function (article) {
         var falseDate = false;
 
         if (article.pubDate > moment().toDate())
@@ -49,13 +46,13 @@ define(['feedparser', 'request', 'moment', 'iconv', './constructEsportArticle'],
         if (!falseDate) {
 
             var toInsert = article;
-            toInsert.language = language;
-            toInsert.website = website;
+            toInsert.language = this.language;
+            toInsert.website = this.website;
 
             db.collection('articles').update(
                 {
                     title: article.title,
-                    website: website,
+                    website: this.website,
                     category: article.category
                 },
                 { $set: toInsert},
@@ -67,12 +64,13 @@ define(['feedparser', 'request', 'moment', 'iconv', './constructEsportArticle'],
                         console.log("save: " + saved);
                     }
                     else {
-                         console.log("new article from " + website + ": " + saved[0].title);
+                        console.log("new article from " + toInsert.website + ": " + toInsert.title);
                     }
                 }
             );
         }
-    }
+    };
 
     return Feed;
-});
+})
+;
