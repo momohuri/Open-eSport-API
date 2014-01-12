@@ -29,6 +29,7 @@ define(['feedparser', 'request', 'moment', 'iconv', './constructArticle'], funct
     Feed.prototype.shapeArticle = function (feedArticle) {
         var article = {
             title: feedArticle.title,
+            description: feedArticle.description,
             category: constructArticle.setCategory(this, feedArticle),
             author: constructArticle.setAuthor(this, feedArticle.author),
             pubDate: constructArticle.setPubDate(this, feedArticle.pubDate),
@@ -57,20 +58,18 @@ define(['feedparser', 'request', 'moment', 'iconv', './constructArticle'], funct
                 },
                 { $set: toInsert},
                 { upsert: true},
-                function (error, saved) {
-                    if (error || !saved) {
-                        console.log("FAILED " + website);
+                function (error, numberRowModified) {
+                    if (error) {
+                        console.log("FAILED " + toInsert.website);
                         console.log("ERROR: " + error);
-                        console.log("save: " + saved);
                     }
-                    else {
+                    else { //
                         console.log("new article from " + toInsert.website + ": " + toInsert.title);
                     }
                 }
             );
         }
     };
-
     return Feed;
 })
 ;
