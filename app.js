@@ -14,6 +14,7 @@ requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, 
         db = database;
         console.log("Connected to "+db.databaseName+" database");
 
+        ensureIndex();
 
         parser.init();
         api.init();
@@ -21,8 +22,17 @@ requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, 
     });
 
 
-//    process.on('uncaughtException', function (err) {
-//        console.error(err);
-//        console.log("keeping node alive");
-//    });
+    process.on('uncaughtException', function (err) {
+        console.error(err);
+        console.log("keeping node alive");
+    });
+
+
+
+    var ensureIndex = function(){
+        db.collection('articles').ensureIndex("title",function(){});
+        db.collection('articles').ensureIndex({ description: "text",tile:"text" } ,function(){});
+    }
+
+
 });

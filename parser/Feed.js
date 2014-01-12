@@ -15,27 +15,15 @@ define(['feedparser', 'request', 'moment', 'iconv', './constructArticle'], funct
         request(this.url)
             .pipe(new FeedParser())
             .on('error', function (error) {
-                console.error(self.website + ": " + error + ". Game: " + self.game);
+                //console.error(self.website + ": " + error + ". Game: " + self.game);
             })
             .on('readable', function () {
                 var stream = this, item;
                 while (feedArticle = stream.read()) {
-                    var article = self.shapeArticle(feedArticle);
+                    var article = constructArticle(this,feedArticle);
                     self.saveArticle(article);
                 }
             });
-    };
-
-    Feed.prototype.shapeArticle = function (feedArticle) {
-        var article = {
-            title: feedArticle.title,
-            description: feedArticle.description,
-            category: constructArticle.setCategory(this, feedArticle),
-            author: constructArticle.setAuthor(this, feedArticle.author),
-            pubDate: constructArticle.setPubDate(this, feedArticle.pubDate),
-            url: constructArticle.setUrl(this, feedArticle.link)
-        };
-        return article;
     };
 
     Feed.prototype.saveArticle = function (article) {
@@ -63,7 +51,7 @@ define(['feedparser', 'request', 'moment', 'iconv', './constructArticle'], funct
                         console.log("FAILED " + toInsert.website);
                         console.log("ERROR: " + error);
                     }
-                    else { //
+                    else {
                         console.log("new article from " + toInsert.website + ": " + toInsert.title);
                     }
                 }

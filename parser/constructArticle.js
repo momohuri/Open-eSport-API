@@ -65,5 +65,14 @@ define([], function () {
         }
     };
 
-    return setters;
+    return function (feedParams,feedArticle) {
+        return {
+            title: feedArticle.title,
+            description: feedArticle.description,
+            category: setters.setCategory(feedParams, feedArticle),
+            author: setters.setAuthor(feedParams, feedArticle.author),
+            pubDate: setters.setPubDate(feedParams, feedArticle.pubDate),
+            url: setters.setUrl(feedParams, feedArticle.link)
+        };
+    };
 });
