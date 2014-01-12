@@ -21,7 +21,7 @@ define(['feedparser', 'request', 'moment', 'iconv', './constructArticle'], funct
                 var stream = this, item;
                 while (feedArticle = stream.read()) {
                     if (feedArticle !== undefined) {
-                        var article = constructArticle(this,feedArticle);
+                        var article = constructArticle(this, feedArticle);
                         self.saveArticle(article);
                     }
                 }

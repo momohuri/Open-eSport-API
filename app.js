@@ -25,6 +25,4 @@ requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, 
         db.collection('articles').ensureIndex("title",function(){});
         db.collection('articles').ensureIndex({ description: "text",tile:"text" } ,function(){});
     }
-
-
 });
