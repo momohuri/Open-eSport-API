@@ -20,8 +20,10 @@ define(['feedparser', 'request', 'moment', 'iconv', './constructArticle'], funct
             .on('readable', function () {
                 var stream = this, item;
                 while (feedArticle = stream.read()) {
-                    var article = constructArticle(this,feedArticle);
-                    self.saveArticle(article);
+                    if (feedArticle !== undefined) {
+                        var article = constructArticle(this,feedArticle);
+                        self.saveArticle(article);
+                    }
                 }
             });
     };
@@ -41,8 +43,7 @@ define(['feedparser', 'request', 'moment', 'iconv', './constructArticle'], funct
             db.collection('articles').update(
                 {
                     title: article.title,
-                    website: this.website,
-                    category: article.category
+                    website: this.website
                 },
                 { $set: toInsert},
                 { upsert: true},
