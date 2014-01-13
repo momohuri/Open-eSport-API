@@ -15,17 +15,29 @@ define(['feedparser', 'request', 'moment', 'iconv', './constructArticle'], funct
         request(this.url)
             .pipe(new FeedParser())
             .on('error', function (error) {
-                //console.error(self.website + ": " + error + ". Game: " + self.game);
+                console.error(self.website + ": " + error + ". Game: " + self.game);
             })
             .on('readable', function () {
                 var stream = this, item;
                 while (feedArticle = stream.read()) {
-                    if (feedArticle !== undefined) {
-                        var article = constructArticle(this, feedArticle);
-                        self.saveArticle(article);
+                    var article = feedArticle;
+                    if (article !== undefined) {
+                        self.verifyIfExist(article, function (exist) {
+                            if (!exist) {
+                                constructArticle(this, article, function (articleConstruct) {
+                                    self.saveArticle(articleConstruct);
+                                });
+                            }
+                        });
                     }
                 }
             });
+    };
+
+    Feed.prototype.verifyIfExist = function (feedArticle, next) {
+        db.collection('articles').findOne({title: feedArticle.title}, function (err, doc) {
+            next(doc !== null);
+        });
     };
 
     Feed.prototype.saveArticle = function (article) {
@@ -40,13 +52,8 @@ define(['feedparser', 'request', 'moment', 'iconv', './constructArticle'], funct
             toInsert.language = this.language;
             toInsert.website = this.website;
 
-            db.collection('articles').update(
-                {
-                    title: article.title,
-                    website: this.website
-                },
-                { $set: toInsert},
-                { upsert: true},
+            db.collection('articles').insert(
+                toInsert,
                 function (error, numberRowModified) {
                     if (error) {
                         console.log("FAILED " + toInsert.website);

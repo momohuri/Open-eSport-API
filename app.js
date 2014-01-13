@@ -23,6 +23,7 @@ requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, 
 
     var ensureIndex = function(){
         db.collection('articles').ensureIndex("title",function(){});
-        db.collection('articles').ensureIndex({ description: "text",tile:"text" } ,function(){});
+        db.collection('articles').ensureIndex({ description: "text",title:"text" } ,function(){});
+        db.collection('articles').ensureIndex({ "place.geo": "2dsphere" } ,function(){});
     }
 });
