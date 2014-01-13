@@ -1,78 +1,73 @@
-define([], function () {
+define(['node-geocoder'], function (geocoder) {
 
     var setters = {
-        setCategory: function (feedParams, article) {
-            var category = null;
 
-            if (feedParams.game == null) {
-                if (article.category !== undefined)
-                    category = this.setCategoryGame(feedParams,article.category);
-                else
-                    category = this.setCategoryGame(feedParams,article.categories);
-                if (category == null)
-                    category = feedParams.websiteShort;
+
+            setPlace: function (adr, next) {
+                var addr = {
+                    city: adr['xcal:x-calconnect-city'] ? adr['xcal:x-calconnect-city']['#'] : null,
+                    country: adr['xcal:x-calconnect-country'] ? adr['xcal:x-calconnect-country']['#'] : null,
+                    region: adr['xcal:x-calconnect-region'] ? adr['xcal:x-calconnect-region']['#'] : null,
+                    street: adr['xcal:x-calconnect-street'] ? adr['xcal:x-calconnect-street']['#'] : null,
+                    name: adr['xcal:x-calconnect-venue-name'] ? adr['xcal:x-calconnect-venue-name']['#'] : null
+                };
+                addr.removeNulls();
+                var LatLong = function () {
+                    var extra = {
+                        formatter: null
+                    };
+                    var geocoderProvider = 'datasciencetoolkit';
+                    var httpAdapter = 'http';
+                    var geocoder = require('node-geocoder').getGeocoder(geocoderProvider, httpAdapter, extra);
+                    geocoder.geocode(addr.street + ' ' + addr.city + ' ' + addr.region + ' ' + addr.country, function (err, res) {
+                            if (res !== undefined && res.length !== 0) {
+                                res[0].geo = {
+                                    type: "Point",
+                                    coordinates: [res[0].latitude, res[0].longitude]
+                                };
+                                delete res[0].latitude;
+                                delete res[0].longitude;
+                                next(res[0]);
+                            } else {
+                                next(addr);
+                            }
+
+                        }
+                    );
+                };
+                LatLong();
+
             }
-            else
-                category = feedParams.game;
-
-            return category
-        },
-        setCategoryGame: function (feedParams,cat) {
-
-            // c un peu chelou ici car cat un array, donc fair un toString dessus?
-            var category;
-            if ((cat.toString().toLowerCase().indexOf("starcraft") > -1) || (cat.toString().toLowerCase().indexOf("sc2") > -1))
-                category = "sc2";
-            if ((cat.toString().toLowerCase().replace(" ", "").indexOf("dota2") > -1) || (cat.toString().toLowerCase().indexOf("defense of the ancients") > -1))
-                category = "dota2";
-            if ((cat.toString().toLowerCase().indexOf("lol") > -1) || (cat.toString().toLowerCase().indexOf("league of legends") > -1))
-                category = "lol";
-            if ((cat.toString().toLowerCase().indexOf("csgo") > -1) || (cat.toString().toLowerCase().indexOf("counter-strike") > -1))
-                category = "csgo";
-            if ((cat.toString().toLowerCase().indexOf("ql") > -1) || (cat.toString().toLowerCase().indexOf("quake") > -1))
-                category = "ql";
-            if ((cat.toString().toLowerCase().indexOf("hearthstone") > -1))
-                category = "hearthstone";
-            if ((cat.toString().toLowerCase().indexOf("sf4") > -1) || (cat.toString().toLowerCase().indexOf("street fighter") > -1) ||
-                (cat.toString().toLowerCase().indexOf("baston") > -1))
-                category = "versus";
-
-            return category;
-        },
-        setAuthor: function (feedParams, author) {
-            if (feedParams.website === "Millenium" || feedParams.website === "Team aAa" || feedParams.website === "SK Gaming")
-                return feedParams.website;
-            else
-                return author;
-        },
-        setPubDate: function (feedParams, pubDate) {
-
-            if (feedParams.website === "Millenium") {
-                pubDate = moment().toDate();
-            }
-            else if (feedParams.website === "Team aAa")
-                pubDate = moment(pubDate).add('hours', 2).toDate();
-            else
-                pubDate = moment(pubDate).toDate();
-
-            return pubDate;
-        },
-        setUrl: function (feedParams, link) {
-            if (feedParams.website === "Reddit")
-                return link + ".compact";
-            else
-                return link;
         }
-    };
+        ;
 
-    return function (feedParams,feedArticle) {
-        return {
-            title: feedArticle.title,
-            description: feedArticle.description,
-            category: setters.setCategory(feedParams, feedArticle),
-            author: setters.setAuthor(feedParams, feedArticle.author),
-            pubDate: setters.setPubDate(feedParams, feedArticle.pubDate),
-            url: setters.setUrl(feedParams, feedArticle.link)
-        };
+    return function (feedParams, feedArticle, next) {
+
+        setters.setPlace(feedArticle['xcal:x-calconnect-venue']['xcal:adr'], function (addr) {
+            var article = {
+                title: feedArticle.title,
+                categories: feedArticle.categories,
+                url: feedArticle["xcal:url"]['#'],
+                place: addr,
+                startDate: feedArticle["xcal:dtstart"][1]['#'],
+                description: feedArticle.description,
+                endDate: feedArticle["xcal:dtstart"][2]['#'],
+                organizer: feedArticle["xcal:x-calconnect-organizer"] ? feedArticle["xcal:x-calconnect-organizer"]["xcal:x-calconnect-organizer-name"]['#'] : null
+            };
+            next(article);
+        });
+
+
     };
-});
+})
+;
+
+
+Object.prototype.removeNulls = function () {
+    var obj = this;
+    var isArray = obj instanceof Array;
+    for (var k in obj) {
+        if (obj[k] === null) isArray ? obj.splice(k, 1) : delete obj[k];
+        else if (typeof obj[k] == "object") obj[k].removeNulls();
+    }
+}
