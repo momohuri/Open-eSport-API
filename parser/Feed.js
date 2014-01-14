@@ -1,4 +1,4 @@
-define(['feedparser', 'request', 'moment', 'iconv', './constructArticle'], function (FeedParser, request, moment, Iconv, constructArticle) {
+define(['feedparser', 'request', 'iconv', './constructArticle'], function (FeedParser, request, Iconv, constructArticle) {
 
     function Feed(url) {
         this.website = url.name;
@@ -41,31 +41,21 @@ define(['feedparser', 'request', 'moment', 'iconv', './constructArticle'], funct
     };
 
     Feed.prototype.saveArticle = function (article) {
-        var falseDate = false;
-
-        if (article.pubDate > moment().toDate())
-            falseDate = true;
-
-        if (!falseDate) {
-
-            var toInsert = article;
-            toInsert.language = this.language;
-            toInsert.website = this.website;
-
-            db.collection('articles').insert(
-                toInsert,
-                function (error, numberRowModified) {
-                    if (error) {
-                        console.log("FAILED " + toInsert.website);
-                        console.log("ERROR: " + error);
-                    }
-                    else {
-                        console.log("new article from " + toInsert.website + ": " + toInsert.title);
-                    }
+        var toInsert = article;
+        toInsert.language = this.language;
+        toInsert.website = this.website;
+        db.collection('articles').insert(
+            toInsert,
+            function (error, numberRowModified) {
+                if (error) {
+                    console.log("FAILED " + toInsert.website);
+                    console.log("ERROR: " + error);
                 }
-            );
-        }
+                else {
+                    console.log("new article from " + toInsert.website + ": " + toInsert.title);
+                }
+            }
+        );
     };
     return Feed;
-})
-;
+});

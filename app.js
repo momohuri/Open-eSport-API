@@ -12,7 +12,7 @@ requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, 
     mongo.connect(conf.mongDB, function (err, database) {
         if (err) throw err;
         db = database;
-        console.log("Connected to "+db.databaseName+" database");
+        console.log("Connected to " + db.databaseName + " database");
 
         ensureIndex();
 
@@ -21,9 +21,11 @@ requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, 
 
     });
 
-    var ensureIndex = function(){
-        db.collection('articles').ensureIndex("title",function(){});
-        db.collection('articles').ensureIndex({ description: "text",title:"text" } ,function(){});
-        db.collection('articles').ensureIndex({ "place.geo": "2dsphere" } ,function(){});
+    var ensureIndex = function () {
+        db.collection('articles').ensureIndex({ description: "text", title: "text"},{},function (err, indexName) {
+        });
+
+        db.collection('articles').ensureIndex({ "place.geo": "2dsphere"},{},function (err, indexName) {
+        });
     }
 });
