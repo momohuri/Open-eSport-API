@@ -4,7 +4,7 @@ define([ './Feed', './Website', 'fs'], function (Feed, Website, fs) {
 
         init: function () {
             var self = this;
-            fs.readFile('./resources/test.json', 'utf8', function (err, file) {
+            fs.readFile('./resources/websites.json', 'utf8', function (err, file) {
                 if (err) throw err;
                 var urls = JSON.parse(file);
                 self.launchFeeds(urls);
@@ -12,7 +12,7 @@ define([ './Feed', './Website', 'fs'], function (Feed, Website, fs) {
                 setInterval(function () {
                     console.log("Parse feeds");
                     self.launchFeeds(urls)
-                }, 20000);
+                }, 20000000);
             });
 
 
@@ -20,7 +20,7 @@ define([ './Feed', './Website', 'fs'], function (Feed, Website, fs) {
 
         launchFeeds: function (urls) {
             urls.forEach(function (url) {
-                new Feed(url);
+                new Feed(url)
             });
         }
     }

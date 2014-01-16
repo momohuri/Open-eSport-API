@@ -5,33 +5,63 @@ define(['feedparser', 'request', 'iconv', './constructArticle'], function (FeedP
         this.websiteShort = url.websiteShort;
         this.url = url.url;
         this.language = url.language;
-        this.game = url.game;
+        this.id = url.id;
         this.theme = url.theme;
+        this.type = url.type;
         this.getArticles();
     }
 
     Feed.prototype.getArticles = function () {
         var self = this;
-        request(this.url)
-            .pipe(new FeedParser())
-            .on('error', function (error) {
-                console.error(self.website + ": " + error + ". Game: " + self.game);
-            })
-            .on('readable', function () {
-                var stream = this, item;
-                while (feedArticle = stream.read()) {
-                    var article = feedArticle;
-                    if (article !== undefined) {
-                        self.verifyIfExist(article, function (exist) {
-                            if (!exist) {
-                                constructArticle(this, article, function (articleConstruct) {
-                                    self.saveArticle(articleConstruct);
-                                });
-                            }
+        //ugly but enougth for the moment
+        switch (this.type) {
+            case 'api':
+
+                var page = 1;
+                request.get(this.url, function (err, res, body) {
+                    if (err) throw err;
+                    var json = JSON.parse(body);
+                    var maxPage = json.meta.total / json.meta.per_page;
+                    requestAgain();
+                    function requestAgain() {
+                        request.get(self.url+'&page='+page, function (err, res, body) {
+                            if (err) throw err;
+                            var json = JSON.parse(body);
+                            json.events.forEach(function (event) {
+                                eachArticle(event);
+                            });
+                            if (++page < maxPage) requestAgain()
                         });
                     }
-                }
-            });
+                });
+
+                break;
+            case 'feed':
+                request(this.url).pipe(new FeedParser()).on('error', function (error) {
+                    console.error(self.website + ": " + error);
+                })
+                    .on('readable', function () {
+                        var stream = this, item;
+                        while (feedArticle = stream.read()) {
+                            eachArticle(feedArticle);
+                        }
+                    });
+                break;
+
+        }
+
+
+        function eachArticle(article) {
+            if (article !== undefined) {
+                self.verifyIfExist(article, function (exist) {
+                    if (!exist) {
+                        constructArticle(self, article, function (articleConstruct) {
+                            self.saveArticle(articleConstruct);
+                        });
+                    }
+                });
+            }
+        }
     };
 
     Feed.prototype.verifyIfExist = function (feedArticle, next) {
@@ -52,7 +82,8 @@ define(['feedparser', 'request', 'iconv', './constructArticle'], function (FeedP
                     console.log("ERROR: " + error);
                 }
                 else {
-                    console.log("new article from " + toInsert.website + ": " + toInsert.title);
+                   //to slow
+                   // console.log("new article from " + toInsert.website + ": " + toInsert.title);
                 }
             }
         );
