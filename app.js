@@ -19,13 +19,17 @@ requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, 
         parser.init();
         api.init();
 
+
+
     });
 
     var ensureIndex = function () {
         db.collection('articles').ensureIndex({ description: "text", title: "text"},{},function (err, indexName) {
         });
+        db.collection('articles').ensureIndex({ categories: true},{},function (err, indexName) {
+        });
+        db.collection('cities').ensureIndex({ "geo": "2dsphere"},{},function (err, indexName) {
 
-        db.collection('articles').ensureIndex({ "place.geo": "2dsphere"},{},function (err, indexName) {
         });
     }
 });
