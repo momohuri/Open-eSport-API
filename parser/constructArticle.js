@@ -82,18 +82,19 @@ define(['node-geocoder'], function (geocoder) {
         },
 
         setStartDate: function (feedArticle) {
-            if (feedArticle["xcal:dtstart"] !== undefined) return feedArticle["xcal:dtstart"][1]['#'];
-            if (feedArticle.datetime_local !== undefined) return feedArticle.datetime_local;
+            if (feedArticle["xcal:dtstart"] !== undefined) return new Date(feedArticle["xcal:dtstart"][1]['#']);
+            if (feedArticle.datetime_local !== undefined) return new Date(feedArticle.datetime_local);
             return null;
         },
 
         setEndDate: function (feedArticle) {
-            if (feedArticle["xcal:dtend"] !== undefined) return feedArticle["xcal:dtend"][1]['#'];
+            if (feedArticle["xcal:dtend"] !== undefined) return new Date(feedArticle["xcal:dtend"][1]['#']);
             return null;
         },
 
         setOrganizer: function (feedArticle) {
             if (feedArticle["xcal:x-calconnect-organizer"] !== undefined) return feedArticle["xcal:x-calconnect-organizer"]["xcal:x-calconnect-organizer-name"]['#'];
+            return null;
 
         }
     };

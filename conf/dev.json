@@ -1,3 +1,4 @@
 {
-    "mongDB":"mongodb://127.0.0.1:27017/events"
+    "mongoCities":"mongodb://127.0.0.1:27017/events",
+    "mongoEvents":"mongodb://127.0.0.1:27017/events"
 }
