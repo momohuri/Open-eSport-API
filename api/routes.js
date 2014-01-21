@@ -3,7 +3,9 @@ define(['./api'], function(api){
 	return {
 
 		init: function(app){
-			app.get('/api', api.find);
+			app.post('/find', api.find);
+            app.get('/categories', api.categories);
+            app.get('/city', api.city);
 
 		}
 
