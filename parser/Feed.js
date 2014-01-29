@@ -1,4 +1,4 @@
-define(['feedparser', 'request', 'iconv', './constructArticle'], function (FeedParser, request, Iconv, constructArticle) {
+define(['feedparser', 'request', './constructArticle', 'http'], function (FeedParser, request, constructArticle, http) {
 
     function Feed(url) {
         this.website = url.name;
@@ -16,36 +16,43 @@ define(['feedparser', 'request', 'iconv', './constructArticle'], function (FeedP
         //ugly but enougth for the moment
         switch (this.type) {
             case 'api':
-
-                var page = 1;
-                request.get(this.url, function (err, res, body) {
-                    if (err) throw err;
-                    var json = JSON.parse(body);
-                    var maxPage = json.meta.total / json.meta.per_page;
-                    requestAgain();
-                    function requestAgain() {
-                        request.get(self.url + '&page=' + page, function (err, res, body) {
-                            if (err) throw err;
-                            try {
-                                var json = JSON.parse(body);
-                                json.events.forEach(function (event) {
-                                    eachArticle(event);
-                                });
-                            } catch (err) {
-                                console.log(err);
+                var buffer = '';
+                var first = true;
+                http.get(this.url,function (res) {
+                    console.log("Got response: " + res.statusCode);
+                    res.setEncoding('utf8');
+                    res.on('data', function (data) {
+                        buffer += data;
+                        if (first) {
+                            var firstDoc = buffer.indexOf('{"stubhubDocumentId');
+                            if (firstDoc == -1) {
+                                buffer = buffer.substring(0, buffer.length);
+                            } else {
+                                buffer = buffer.substring(firstDoc, buffer.length);
+                                first = false;
                             }
+                        }
+                        if (buffer.search('},') !== -1) {  //if we we have at least one complete json (we assume that we don't have json in json)
+                            var n = buffer.lastIndexOf('},');
+                            var result = buffer.substring(0, n + 1);
+                            buffer = buffer.substring(n + 2, buffer.length);
+                            result = JSON.parse("[" + result + "]");
+                            for(var i =0;i<result.length;i++){
+                                eachArticle(result[i]);
+                            }
+                        }
 
-                            if (++page < maxPage) requestAgain()
-                        });
-                    }
-                });
+
+                    })
+                }).on('error', function (e) {
+                        console.log("Got error: " + e.message);
+                    });
 
                 break;
             case 'feed':
-                request(this.url).pipe(new FeedParser()).on('error', function (error) {
+                request(this.url).pipe(new FeedParser()).on('error',function (error) {
                     console.error(self.website + ": " + error);
-                })
-                    .on('readable', function () {
+                }).on('readable', function () {
                         var stream = this, item;
                         while (feedArticle = stream.read()) {
                             eachArticle(feedArticle);
@@ -57,7 +64,11 @@ define(['feedparser', 'request', 'iconv', './constructArticle'], function (FeedP
 
 
         function eachArticle(article) {
-            if (article !== undefined) {
+            var date;
+            if (article["xcal:dtstart"] !== undefined) date= new Date(article["xcal:dtstart"][1]['#']);
+            if (article.event_date !== undefined) date= new Date(article.event_date);
+
+            if (article !== undefined && date>new Date()) {
                 self.verifyIfExist(article, function (exist) {
                     if (!exist) {
                         constructArticle(self, article, function (articleConstruct) {
@@ -72,9 +83,9 @@ define(['feedparser', 'request', 'iconv', './constructArticle'], function (FeedP
     Feed.prototype.verifyIfExist = function (feedArticle, next) {
         //todo , redondant woth construct
         var url;
-        if (feedArticle["xcal:url"] !== undefined) url = feedArticle["xcal:url"]['#'];
         if (feedArticle.url !== undefined) url = feedArticle.url;
-        dbCheck.collection('articles').findOne({url: url }, function (err, doc) {
+        if (feedArticle.genreUrlPath !== undefined) url = feedArticle.genreUrlPath+'/'+feedArticle.urlpath;
+        dbCheck.collection('articles2').findOne({url: url }, function (err, doc) {
             if (err) throw err;
             next(doc !== null);
         });
@@ -84,7 +95,7 @@ define(['feedparser', 'request', 'iconv', './constructArticle'], function (FeedP
         var toInsert = article;
         toInsert.language = this.language;
         toInsert.website = this.website;
-        dbCheck.collection('articles').insert(toInsert, function (error, numberRowModified) {
+        dbCheck.collection('articles2').insert(toInsert, function (error, numberRowModified) {
             if (error) {
                 console.log("FAILED " + toInsert.website);
                 console.log("ERROR: " + error);

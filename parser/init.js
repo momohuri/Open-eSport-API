@@ -1,4 +1,4 @@
-define([ './Feed', './Website', 'fs'], function (Feed, Website, fs) {
+define([ './Feed', 'fs'], function (Feed, fs) {
     'use strict';
     return {
 

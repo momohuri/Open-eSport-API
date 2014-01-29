@@ -6,7 +6,7 @@ define(['node-geocoder'], function (geocoder) {
         setPlace: function (feedParams, adr, next) {
             var addr
             switch (feedParams.id) {
-                case 'event-bride':
+                case 'event-brite':
                     adr = adr['xcal:x-calconnect-venue']['xcal:adr'];
                     addr = {
                         city: adr['xcal:x-calconnect-city'] ? adr['xcal:x-calconnect-city']['#'] : null,
@@ -16,36 +16,38 @@ define(['node-geocoder'], function (geocoder) {
                         name: adr['xcal:x-calconnect-venue-name'] ? adr['xcal:x-calconnect-venue-name']['#'] : null
                     };
                     addr.removeNulls();
+                    geocode(0);
 
+                   // next(addr);
 
-                    next(addr);
-                    //geocode(0); todo don't need geo for the moment
                     break;
-                case  'seatgeek':
+                case  'stubhub':
                     addr = {
-                        city: adr.venue.city,
-                        country: adr.venue.country,
-                        region: adr.venue.state,
-                        street: adr.venue.address,
-                        postal: adr.venue.postal_code,
-                        name: adr.venue.name
+                        city: adr.ancestorGeoDescriptions[3],
+                        country: adr.ancestorGeoDescriptions[1],
+                        region: adr.ancestorGeoDescriptions[2],
+                        street: adr.ancestorGeoDescriptions[4],
+                        postal: adr.zip,
+                        name: adr.eventGeoDescription
 
                     };
-//                    addr.geo = {
-//                        type: "Point",
-//                        coordinates: [adr.venue.location.lon, adr.venue.location.adr]
-//                    };   todo don't need geo for the moment
+                    addr.geo = {
+                        type: "Point",
+                        coordinates: [adr.longitude, adr.latitude]
+                    };
+//                    todo don't need geo for the moment
                     next(addr);
                     break;
-            }
 
+            }
             var extra = {
                 formatter: null
             };
-            var geocoderProvider = ['datasciencetoolkit', 'openstreetmap', 'google'];
-            var httpAdapter = 'http';
+
 
             function geocode(i) {
+                var geocoderProvider = ['datasciencetoolkit', 'openstreetmap', 'google'];
+                var httpAdapter = 'http';
                 var geocoder = require('node-geocoder').getGeocoder(geocoderProvider[i], httpAdapter, extra);
                 geocoder.geocode(addr.street + ' ' + addr.city + ' ' + addr.region + ' ' + addr.country, function (err, res) {
                         if (res !== undefined && res.length !== 0) {
@@ -70,20 +72,20 @@ define(['node-geocoder'], function (geocoder) {
 
 
         setCategory: function (feedArticle) {
+            if (feedArticle.ancestorGenreDescriptions !== undefined)return feedArticle.ancestorGenreDescriptions;
             if (feedArticle.categories !== undefined)return feedArticle.categories;
-            if (feedArticle.type !== undefined)return [feedArticle.type];
             return [];
         },
 
         setUrl: function (feedArticle) {
+            if (feedArticle.genreUrlPath !== undefined) url = feedArticle.genreUrlPath+'/'+feedArticle.urlpath;
             if (feedArticle["xcal:url"] !== undefined)return feedArticle["xcal:url"]['#'];
-            if (feedArticle.url !== undefined) return feedArticle.url;
             return null;
         },
 
         setStartDate: function (feedArticle) {
             if (feedArticle["xcal:dtstart"] !== undefined) return new Date(feedArticle["xcal:dtstart"][1]['#']);
-            if (feedArticle.datetime_local !== undefined) return new Date(feedArticle.datetime_local);
+            if (feedArticle.event_date !== undefined) return new Date(feedArticle.event_date);
             return null;
         },
 

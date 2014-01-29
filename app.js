@@ -49,7 +49,3 @@ requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, 
     }
 })
 ;
-
-process.on('uncaughtException', function (err) {
-    console.log('Caught exception: ' + err);
-});

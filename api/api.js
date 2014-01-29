@@ -14,7 +14,7 @@ define([], function () {
                     dbCities.collection('cities').distinct('city', {
                         "geo": { $nearSphere: {$geometry: {coordinates: [doc.longitude, doc.latitude], type: 'Point'}, $maxDistance: params.distance } }
                     }, function (err, cities) {
-                        db.collection('articles').find({"place.city": {$in: cities}, 'categories': {$in: params.categories}}).toArray(function (err, docs) {
+                        db.collection('articles').find({"place.city": {$in: cities}}).toArray(function (err, docs) {
                             res.send(docs);
                         })
 
@@ -27,7 +27,7 @@ define([], function () {
             }
 
 
-            //todo full text search if needed
+            //full text search if needed
 
 //                db.executeDbCommand({text: 'articles', search: params.search, filter: {"place.city": {$in: cities}}}, function (err, result) {  //order by cities
 //                    res.send(result.documents[0].results.map(function (item) {
@@ -70,6 +70,17 @@ define([], function () {
                     });
                     res.send(docs)
                 });
+        },
+
+        city: function (req, res) {
+            var regex = new RegExp(req.query["term"], 'i');
+            dbCities.collection("cities").find({city: regex,country:'US'}, { 'city': 1,'region':1}).limit(20).toArray(function (err, docs) {
+                if (err) throw err;
+                res.send(docs);
+
+            });
+
+
         }
     }
 });
