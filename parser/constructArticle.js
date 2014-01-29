@@ -18,7 +18,7 @@ define(['node-geocoder'], function (geocoder) {
                     addr.removeNulls();
                     geocode(0);
 
-                   // next(addr);
+                    // next(addr);
 
                     break;
                 case  'stubhub':
@@ -78,7 +78,7 @@ define(['node-geocoder'], function (geocoder) {
         },
 
         setUrl: function (feedArticle) {
-            if (feedArticle.genreUrlPath !== undefined) url = feedArticle.genreUrlPath+'/'+feedArticle.urlpath;
+            if (feedArticle.genreUrlPath !== undefined) return  feedArticle.genreUrlPath + '/' + feedArticle.urlpath;
             if (feedArticle["xcal:url"] !== undefined)return feedArticle["xcal:url"]['#'];
             return null;
         },
