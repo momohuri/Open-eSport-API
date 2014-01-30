@@ -40,7 +40,7 @@ requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, 
         });
         db.collection('articles').ensureIndex({ cities: true}, {}, function (err, indexName) {
         });
-        db.collection('articles').ensureIndex({ url: true}, {}, function (err, indexName) {
+        dbCheck.collection('articles2').ensureIndex({ url: true}, {}, function (err, indexName) {
         });
         dbCities.collection('cities').ensureIndex({ "geo": "2dsphere"}, {}, function (err, indexName) {
         });

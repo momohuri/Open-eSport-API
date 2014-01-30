@@ -37,7 +37,7 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
                             var result = buffer.substring(0, n + 1);
                             buffer = buffer.substring(n + 2, buffer.length);
                             result = JSON.parse("[" + result + "]");
-                            for(var i =0;i<result.length;i++){
+                            for (var i = 0; i < result.length; i++) {
                                 eachArticle(result[i]);
                             }
                         }
@@ -45,33 +45,33 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
 
                     })
                 }).on('error', function (e) {
-                        console.log("Got error: " + e.message);
-                    });
+                    console.log("Got error: " + e.message);
+                });
 
                 break;
             case 'feed':
                 request(this.url).pipe(new FeedParser()).on('error',function (error) {
                     console.error(self.website + ": " + error);
                 }).on('readable', function () {
-                        var stream = this, item;
-                        while (feedArticle = stream.read()) {
-                            eachArticle(feedArticle);
-                        }
-                    });
+                    var stream = this, item;
+                    while (feedArticle = stream.read()) {
+                        eachArticle(feedArticle);
+                    }
+                });
                 break;
 
         }
 
 
         function eachArticle(article) {
-            var date;
-            if (article["xcal:dtstart"] !== undefined) date= new Date(article["xcal:dtstart"][1]['#']);
-            if (article.event_date !== undefined) date= new Date(article.event_date);
-
-            if (article !== undefined && date>new Date()) {
+            if (self.id === "stubhub" && (article.active != 1 || article.maxPrice===0)) {
+                return;
+            }
+            var date = constructArticle.setStartDate(article, self.id);
+            if (article !== undefined && new Date(date) > new Date()) {
                 self.verifyIfExist(article, function (exist) {
                     if (!exist) {
-                        constructArticle(self, article, function (articleConstruct) {
+                        constructArticle.setAll(article, self, function (articleConstruct) {
                             self.saveArticle(articleConstruct);
                         });
                     }
@@ -81,10 +81,7 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
     };
 
     Feed.prototype.verifyIfExist = function (feedArticle, next) {
-        //todo , redondant woth construct
-        var url;
-        if (feedArticle.url !== undefined) url = feedArticle.url;
-        if (feedArticle.genreUrlPath !== undefined) url = feedArticle.genreUrlPath+'/'+feedArticle.urlpath;
+        var url = constructArticle.setUrl(feedArticle, this.id);
         dbCheck.collection('articles2').findOne({url: url }, function (err, doc) {
             if (err) throw err;
             next(doc !== null);
@@ -95,7 +92,7 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
         var toInsert = article;
         toInsert.language = this.language;
         toInsert.website = this.website;
-        dbCheck.collection('articles2').insert(toInsert, function (error, numberRowModified) {
+        dbCheck.collection('articles2').insert({url:article.url}, function (error, numberRowModified) {
             if (error) {
                 console.log("FAILED " + toInsert.website);
                 console.log("ERROR: " + error);
@@ -117,3 +114,8 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
 
     return Feed;
 });
+
+
+
+
+

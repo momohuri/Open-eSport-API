@@ -2,12 +2,11 @@ define(['node-geocoder'], function (geocoder) {
 
     var setters = {
 
-
-        setPlace: function (feedParams, adr, next) {
-            var addr
-            switch (feedParams.id) {
+        setPlace: function (article, next) {
+            var addr;
+            switch (this.id) {
                 case 'event-brite':
-                    adr = adr['xcal:x-calconnect-venue']['xcal:adr'];
+                    var adr = article['xcal:x-calconnect-venue']['xcal:adr'];
                     addr = {
                         city: adr['xcal:x-calconnect-city'] ? adr['xcal:x-calconnect-city']['#'] : null,
                         country: adr['xcal:x-calconnect-country'] ? adr['xcal:x-calconnect-country']['#'] : null,
@@ -23,19 +22,18 @@ define(['node-geocoder'], function (geocoder) {
                     break;
                 case  'stubhub':
                     addr = {
-                        city: adr.ancestorGeoDescriptions[3],
-                        country: adr.ancestorGeoDescriptions[1],
-                        region: adr.ancestorGeoDescriptions[2],
-                        street: adr.ancestorGeoDescriptions[4],
-                        postal: adr.zip,
-                        name: adr.eventGeoDescription
+                        city: article.ancestorGeoDescriptions[3],
+                        country: article.ancestorGeoDescriptions[1],
+                        region: article.ancestorGeoDescriptions[2],
+                        street: article.ancestorGeoDescriptions[4],
+                        postal: article.zip,
+                        name: article.eventGeoDescription
 
                     };
                     addr.geo = {
                         type: "Point",
-                        coordinates: [adr.longitude, adr.latitude]
+                        coordinates: [article.longitude, article.latitude]
                     };
-//                    todo don't need geo for the moment
                     next(addr);
                     break;
 
@@ -70,61 +68,96 @@ define(['node-geocoder'], function (geocoder) {
 
         },
 
-
-        setCategory: function (feedArticle) {
-            if (feedArticle.ancestorGenreDescriptions !== undefined)return feedArticle.ancestorGenreDescriptions;
-            if (feedArticle.categories !== undefined)return feedArticle.categories;
+        setCategory: function (feedArticle, id) {
+            if (id === undefined) id = this.id;
+            if (id === 'stubhub') {
+                return feedArticle.ancestorGenreDescriptions;
+            } else if (id === 'event-brite') {
+                return feedArticle.categories;
+            }
             return [];
         },
 
-        setUrl: function (feedArticle) {
-            if (feedArticle.genreUrlPath !== undefined) return  feedArticle.genreUrlPath + '/' + feedArticle.urlpath;
-            if (feedArticle["xcal:url"] !== undefined)return feedArticle["xcal:url"]['#'];
+        setUrl: function (feedArticle, id) {
+            if (id === undefined) id = this.id;
+            if (id === 'stubhub') {
+                return  'http://stubhub.com/' + feedArticle.genreUrlPath + '/' + feedArticle.urlpath;
+            } else if (id === 'event-brite') {
+                return feedArticle["xcal:url"]['#'];
+            }
             return null;
         },
 
-        setStartDate: function (feedArticle) {
-            if (feedArticle["xcal:dtstart"] !== undefined) return new Date(feedArticle["xcal:dtstart"][1]['#']);
-            if (feedArticle.event_date !== undefined) return new Date(feedArticle.event_date);
+        setStartDate: function (feedArticle, id) {
+            if (id === undefined) id = this.id;
+            if (id === 'stubhub') {
+                return new Date(feedArticle.event_date);
+            } else if (id === 'event-brite') {
+                return new Date(feedArticle["xcal:dtstart"][1]['#']);
+            }
+            return [];
+        },
+
+        setEndDate: function (feedArticle, id) {
+            if (id === undefined) id = this.id;
+            if (id === 'event-brite' && feedArticle["xcal:dtend"] !== undefined) {
+                return new Date(feedArticle["xcal:dtend"][1]['#']);
+            }
             return null;
         },
 
-        setEndDate: function (feedArticle) {
-            if (feedArticle["xcal:dtend"] !== undefined) return new Date(feedArticle["xcal:dtend"][1]['#']);
+        setOrganizer: function (feedArticle, id) {
+            if (id === undefined) id = this.id;
+            if (id === 'event-brite' && feedArticle["xcal:x-calconnect-organizer"] !== undefined) {
+                return feedArticle["xcal:x-calconnect-organizer"]["xcal:x-calconnect-organizer-name"]['#'];
+            }
             return null;
         },
 
-        setOrganizer: function (feedArticle) {
-            if (feedArticle["xcal:x-calconnect-organizer"] !== undefined) return feedArticle["xcal:x-calconnect-organizer"]["xcal:x-calconnect-organizer-name"]['#'];
+        setMinPrice: function (feedArticle, id) {
+            if (id === undefined) id = this.id;
+            if (id === 'stubhub') {
+                return feedArticle["minPrice"];
+            }
             return null;
+        },
+        setMaxPrice: function (feedArticle, id) {
+            if (id === undefined) id = this.id;
+            if (id === 'stubhub') {
+                return feedArticle["maxPrice"];
+            }
+            return null;
+        },
 
+        setAll: function (feedArticle, feedParams, next) {
+
+            this.id = feedParams.id;
+            setters.setPlace(feedArticle, function (addr) {
+                var article = {
+                    title: feedArticle.title,
+                    categories: setters.setCategory(feedArticle),
+                    url: setters.setUrl(feedArticle),
+                    place: addr,
+                    startDate: setters.setStartDate(feedArticle),
+                    endDate: setters.setEndDate(feedArticle),
+                    description: feedArticle.description,
+                    organizer: setters.setOrganizer(feedArticle),
+                    minPrice: setters.setMinPrice(feedArticle),
+                    maxPrice: setters.setMaxPrice(feedArticle)
+                };
+                article.removeNulls();
+                next(article);
+            });
         }
     };
 
 
-    return function (feedParams, feedArticle, next) {
-        //addr is a callback based and not the rest because migth need geolocation
-        setters.setPlace(feedParams, feedArticle, function (addr) {
-
-            var article = {
-                title: feedArticle.title,
-                categories: setters.setCategory(feedArticle),
-                url: setters.setUrl(feedArticle),
-                place: addr,
-                startDate: setters.setStartDate(feedArticle),
-                endDate: setters.setEndDate(feedArticle),
-                description: feedArticle.description,
-                organizer: setters.setOrganizer(feedArticle)
-            };
-            article.removeNulls();
-            next(article);
-        });
-    };
+    return setters;
 })
 ;
 
 
-//I don't want to insert null fiends in mongo
+//I don't want to insert null fields in mongo
 Object.prototype.removeNulls = function () {
     var obj = this;
     var isArray = obj instanceof Array;
