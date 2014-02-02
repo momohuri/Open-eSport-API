@@ -25,7 +25,7 @@ define(['node-geocoder'], function (geocoder) {
                         city: article.ancestorGeoDescriptions[3],
                         country: article.ancestorGeoDescriptions[1],
                         region: article.ancestorGeoDescriptions[2],
-                        street: article.ancestorGeoDescriptions[4],
+                        street: article.addr1,
                         postal: article.zip,
                         name: article.eventGeoDescription
 

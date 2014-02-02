@@ -42,10 +42,13 @@ requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, 
         });
         dbCheck.collection('articles2').ensureIndex({ url: true}, {}, function (err, indexName) {
         });
-        dbCities.collection('cities').ensureIndex({ "geo": "2dsphere"}, {}, function (err, indexName) {
+
+        db.collection('articles').ensureIndex({ "place.geo": "2dsphere"}, {}, function (err, indexName) {
         });
-        dbCities.collection('cities').ensureIndex({ "city": true, "country": true}, {}, function (err, indexName) {
-        });
+//        dbCities.collection('cities').ensureIndex({ "geo": "2dsphere"}, {}, function (err, indexName) {
+//        });
+//        dbCities.collection('cities').ensureIndex({ "city": true, "country": true}, {}, function (err, indexName) {
+//        });
     }
 })
 ;
