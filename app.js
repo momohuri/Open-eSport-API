@@ -33,6 +33,8 @@ requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, 
     ;
 
 
+
+
     var ensureIndex = function () {
 //        db.collection('articles').ensureIndex({ description: "text", title: "text"}, {}, function (err, indexName) {
 //        });

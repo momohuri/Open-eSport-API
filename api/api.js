@@ -14,19 +14,21 @@ define([], function () {
 
                 if (params.categories != undefined) query.categories = params.categories;
                 if (params.minPrice != undefined) {
-                    if (query.$or == undefined) query.$or = [];
-                    query.$or.push({$and: [
-                        {'minPrice': {$lte: 'maxPrice'}},
-                        {'minPrice': {$gte: 'minPrice'}}
-                    ]});
+                    query['maxPrice'] = {$gte: Number(params.minPrice)}
                 }
                 if (params.maxPrice != undefined) {
-                    if (query.$or == undefined) query.$or = [];
-                    query.$or.push({$and: [
-                        {'maxPrice': {$lte: 'maxPrice'}},
-                        {'maxPrice': {$gte: 'minPrice'}}
-                    ]});
+                    query['minPrice'] = {$lte: Number(params.maxPrice)}
                 }
+                if (params.startDate == undefined) {
+                    res.send({error: "provide a start Date"})
+                } else if (params.endDate == undefined) {
+                    var start = new Date(params.startDate).setHours(0, 0, 0,0) ;
+                    var end = new Date(params.startDate).setHours(23, 59, 59, 999);
+                }else{
+                    end = new Date(params.endDate).setHours(23,59,59,999);
+                }
+                query['startDate'] = {"$gt": new Date(start),"$lt":new Date(end)};
+
 
                 if (params.latitude != undefined && params.longitude) {
                     query['place.geo'] = { $near: {$geometry: {coordinates: [Number(params.longitude), Number(params.latitude)], type: 'Point'}, $maxDistance: params.distance }};
@@ -34,6 +36,7 @@ define([], function () {
 
 
                 db.collection('articles').find(query).limit(numberPerPage).skip(skip).toArray(function (err, docs) {
+                    if(err)throw err;
                     res.send(docs);
                 });
 
@@ -84,12 +87,30 @@ define([], function () {
             },
 
             city: function (req, res) {
-                var regex = new RegExp(req.query["term"], 'i');
-                dbCities.collection("cities").find({city: regex, country: 'US'}, { 'city': 1, 'region': 1}).limit(20).toArray(function (err, docs) {
-                    if (err) throw err;
-                    res.send(docs);
+                var map = function () {
+                    if (!this.place) {
+                        return;
+                    }
+                    for (index in this.place) {
+                        emit(this.place[index], 1);
+                    }
+                };
+                var reduce = function (previous, current) {
+                    var count = 0;
+                    for (index in current) {
+                        count += current[index];
+                    }
 
-                });
+                    return count;
+                };
+
+                db.collection('articles').mapReduce(map, reduce, {out: { inline: 1 }},
+                    function (err, docs) {
+                        docs.sort(function (a, b) {
+                            return b.value - a.value;
+                        });
+                        res.send(docs)
+                    });
 
 
             }

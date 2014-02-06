@@ -14,8 +14,8 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
     Feed.prototype.getArticles = function () {
         var self = this;
         //ugly but enougth for the moment
-        switch (this.type) {
-            case 'api':
+        switch (this.id) {
+            case 'stubhub':
                 var buffer = '';
                 var first = true;
                 http.get(this.url,function (res) {
@@ -49,14 +49,29 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
                 });
 
                 break;
-            case 'feed':
-                request(this.url).pipe(new FeedParser()).on('error',function (error) {
-                    console.error(self.website + ": " + error);
-                }).on('readable', function () {
-                    var stream = this, item;
-                    while (feedArticle = stream.read()) {
-                        eachArticle(feedArticle);
-                    }
+            case 'eventbrite':
+                var body = '';
+                http.get("http://www.eventbrite.com/json/event_search?app_key=C2IDOBMECGZZUQKLJQ&max=100&region=CA&since_id=9737508149",function (res) {
+                    console.log("Got response: " + res.statusCode);
+                    res.on('data', function (data) {
+                        body += data;
+                    });
+                    res.on('end', function () {
+                        debugger
+                        console.log(data);
+                        body = JSON.parse(body).events;
+                        if (body.length === 101) {
+                            console.log('doitagain with since = ' + body[101].event.id);
+                        }
+                        for (var i = 1; i < body.length; i++) {
+                            debugger
+                            //todo work from here
+                            eachArticle(body[i].event);
+                        }
+                    });
+
+                }).on('error', function (e) {
+                    console.log("Got error: " + e.message);
                 });
                 break;
 
@@ -64,7 +79,7 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
 
 
         function eachArticle(article) {
-            if (self.id === "stubhub" && (article.active != 1 || article.maxPrice===0)) {
+            if (self.id === "stubhub" && (article.active != 1 || article.maxPrice === 0)) {
                 return;
             }
             var date = constructArticle.setStartDate(article, self.id);
@@ -92,7 +107,7 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
         var toInsert = article;
         toInsert.language = this.language;
         toInsert.website = this.website;
-        dbCheck.collection('articles2').insert({url:article.url}, function (error, numberRowModified) {
+        dbCheck.collection('articles2').insert({url: article.url}, function (error, numberRowModified) {
             if (error) {
                 console.log("FAILED " + toInsert.website);
                 console.log("ERROR: " + error);
