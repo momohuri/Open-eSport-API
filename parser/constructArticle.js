@@ -113,6 +113,7 @@ define(['node-geocoder'], function (geocoder) {
         setOrganizer: function (feedArticle, id) {
             if (id === undefined) id = this.id;
             if (id === 'eventbrite') {
+                if(feedArticle.organizer == undefined) return null;
                 return feedArticle.organizer.name;
             }
             return null;

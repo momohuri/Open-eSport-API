@@ -4,7 +4,7 @@ define([ './Feed', 'fs'], function (Feed, fs) {
 
         init: function () {
             var self = this;
-            fs.readFile('./resources/websites.json', 'utf8', function (err, file) {
+            fs.readFile('./resources/test.json', 'utf8', function (err, file) {
                 if (err) throw err;
                 var urls = JSON.parse(file);
                 self.launchFeeds(urls);
