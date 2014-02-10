@@ -40,7 +40,6 @@ define([], function () {
 
                 db.collection('articles').find(query).limit(numberPerPage).skip(skip).sort('startDate').toArray(function (err, docs) {
                     if (err)throw err;
-                    console.log(query)
                     res.send(docs);
                 });
 

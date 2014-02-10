@@ -14,7 +14,6 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
 
     Feed.prototype.getArticles = function () {
         var self = this;
-        //ugly but enougth for the moment
         switch (this.id) {
             case 'stubhub':
                 var buffer = '';
@@ -51,17 +50,18 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
 
                 break;
             case 'eventbrite':
+                var page = 1;
+
+            function get(page) {
                 var body = '';
-                http.get("http://www.eventbrite.com/json/event_search?app_key=C2IDOBMECGZZUQKLJQ&max=100&region=CA&since_id=9737508149",function (res) {
-                    console.log("Got response: " + res.statusCode);
+                http.get("http://www.eventbrite.com/json/event_search?app_key=C2IDOBMECGZZUQKLJQ&max=100&page=" + page,function (res) {
                     res.on('data', function (data) {
                         body += data;
                     });
                     res.on('end', function () {
-                        console.log(data);
                         body = JSON.parse(body).events;
                         if (body.length === 101) {
-                            console.log('doitagain with since = ' + body[101].event.id);
+                            get(++page)
                         }
                         for (var i = 1; i < body.length; i++) {
                             eachArticle(body[i].event);
@@ -71,6 +71,9 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
                 }).on('error', function (e) {
                     console.log("Got error: " + e.message);
                 });
+            }
+                get(page);
+
                 break;
 
         }
@@ -80,12 +83,17 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
             if (self.id === "stubhub" && (article.active != 1 || article.maxPrice === 0)) {
                 return;
             }
+            if (self.id === "eventbrite" && article.status != "Live") {
+                return;
+            }
             var date = constructArticle.setStartDate(article, self.id);
             if (article !== undefined && new Date(date) > new Date()) {
                 self.verifyIfExist(article, function (exist) {
                     if (!exist) {
                         constructArticle.setAll(article, self, function (articleConstruct) {
-                            self.saveArticle(articleConstruct);
+                            if (articleConstruct) {
+                                self.saveArticle(articleConstruct);
+                            }
                         });
                     }
                 });

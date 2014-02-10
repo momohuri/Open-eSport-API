@@ -5,19 +5,23 @@ define(['node-geocoder'], function (geocoder) {
         setPlace: function (article, next) {
             var addr;
             switch (this.id) {
-                case 'event-brite':
-                    var adr = article['xcal:x-calconnect-venue']['xcal:adr'];
+                case 'eventbrite':
+                    if (article.venue == undefined) {
+                        next(false);
+                        return
+                    } //if no adress ==goodbye
                     addr = {
-                        city: adr['xcal:x-calconnect-city'] ? adr['xcal:x-calconnect-city']['#'] : null,
-                        country: adr['xcal:x-calconnect-country'] ? adr['xcal:x-calconnect-country']['#'] : null,
-                        region: adr['xcal:x-calconnect-region'] ? adr['xcal:x-calconnect-region']['#'] : null,
-                        street: adr['xcal:x-calconnect-street'] ? adr['xcal:x-calconnect-street']['#'] : null,
-                        name: adr['xcal:x-calconnect-venue-name'] ? adr['xcal:x-calconnect-venue-name']['#'] : null
+                        city: article.venue.city,
+                        country: article.venue.country,
+                        region: article.venue.region,
+                        street: article.venue.address,
+                        name: article.venue.name
                     };
-                    addr.removeNulls();
-                    geocode(0);
-
-                    // next(addr);
+                    addr.geo = {
+                        type: "Point",
+                        coordinates: [article.venue.longitude, article.venue.latitude]
+                    };
+                    next(addr);
 
                     break;
                 case  'stubhub':
@@ -72,8 +76,8 @@ define(['node-geocoder'], function (geocoder) {
             if (id === undefined) id = this.id;
             if (id === 'stubhub') {
                 return feedArticle.ancestorGenreDescriptions;
-            } else if (id === 'event-brite') {
-                return feedArticle.categories;
+            } else if (id === 'eventbrite') {
+                return feedArticle.category.split(',');
             }
             return [];
         },
@@ -82,8 +86,8 @@ define(['node-geocoder'], function (geocoder) {
             if (id === undefined) id = this.id;
             if (id === 'stubhub') {
                 return  'http://stubhub.com/' + feedArticle.genreUrlPath + '/' + feedArticle.urlpath;
-            } else if (id === 'event-brite') {
-                return feedArticle["xcal:url"]['#'];
+            } else if (id === 'eventbrite') {
+                return feedArticle.url;
             }
             return null;
         },
@@ -92,39 +96,41 @@ define(['node-geocoder'], function (geocoder) {
             if (id === undefined) id = this.id;
             if (id === 'stubhub') {
                 return new Date(feedArticle.event_date);
-            } else if (id === 'event-brite') {
-                return new Date(feedArticle["xcal:dtstart"][1]['#']);
+            } else if (id === 'eventbrite') {
+                return new Date(feedArticle.start_date);
             }
-            return [];
+            return null;
         },
 
         setEndDate: function (feedArticle, id) {
             if (id === undefined) id = this.id;
-            if (id === 'event-brite' && feedArticle["xcal:dtend"] !== undefined) {
-                return new Date(feedArticle["xcal:dtend"][1]['#']);
+            if (id === 'eventbrite') {
+                return new Date(feedArticle.end_date);
             }
             return null;
         },
 
         setOrganizer: function (feedArticle, id) {
             if (id === undefined) id = this.id;
-            if (id === 'event-brite' && feedArticle["xcal:x-calconnect-organizer"] !== undefined) {
-                return feedArticle["xcal:x-calconnect-organizer"]["xcal:x-calconnect-organizer-name"]['#'];
+            if (id === 'eventbrite') {
+                return feedArticle.organizer.name;
             }
             return null;
         },
 
-        setMinPrice: function (feedArticle, id) {
+        setPrice: function (feedArticle, id) {
             if (id === undefined) id = this.id;
+            var price = {};
             if (id === 'stubhub') {
-                return feedArticle["minPrice"];
-            }
-            return null;
-        },
-        setMaxPrice: function (feedArticle, id) {
-            if (id === undefined) id = this.id;
-            if (id === 'stubhub') {
-                return feedArticle["maxPrice"];
+                price.max = feedArticle["maxPrice"];
+                price.min = feedArticle["minPrice"];
+                price.currency = feedArticle.currency_code;
+                return price;
+            } else if (id === 'eventbrite') {
+                price.max = feedArticle.tickets[0].ticket.max;
+                price.min = feedArticle.tickets[0].ticket.min;
+                price.currency = feedArticle.tickets[0].ticket.currency;
+                return price;
             }
             return null;
         },
@@ -133,27 +139,35 @@ define(['node-geocoder'], function (geocoder) {
             if (id === undefined) id = this.id;
             if (id === 'stubhub') {
                 return feedArticle.description;
+            } else if (id == 'eventbrite') {
+                return feedArticle.title;
             }
+            return null;
         },
 
-        setDesc: function(feedArticle,id){
+        setDesc: function (feedArticle, id) {
             if (id === undefined) id = this.id;
             if (id === 'stubhub') {
                 return feedArticle.title;
+            } else if (id === 'eventbrite') {
+                return feedArticle.description;
             }
+            return null;
         },
 
-        setId:function(feedArticle,id){
+        setId: function (feedArticle, id) {
             if (id === undefined) id = this.id;
             if (id === 'stubhub') {
                 return feedArticle.event_id;
+            } else if (id === 'eventbrite') {
+                return feedArticle.id
             }
         },
 
         setAll: function (feedArticle, feedParams, next) {
-
             this.id = feedParams.id;
             model.setPlace(feedArticle, function (addr) {
+                if (!addr)next(false);//if not address
                 var article = {
                     title: model.setTitle(feedArticle),
                     categories: model.setCategory(feedArticle),
@@ -163,18 +177,11 @@ define(['node-geocoder'], function (geocoder) {
                     endDate: model.setEndDate(feedArticle),
                     description: model.setDesc(feedArticle),
                     organizer: model.setOrganizer(feedArticle),
-                    minPrice: model.setMinPrice(feedArticle),
-                    maxPrice: model.setMaxPrice(feedArticle),
-                    eventId:model.setId(feedArticle)
+                    price: model.setPrice(feedArticle),
+                    eventId: model.setId(feedArticle)
                 };
                 article.removeNulls();
                 next(article);
-            });
-        },
-
-        getLastId: function (website, next) {
-            db.collection('articles2').findOne({website: website}, {sort: {$natural: -1}}, function (err, doc) {
-                next(doc)
             });
         }
     };
