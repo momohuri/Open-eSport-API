@@ -22,10 +22,11 @@ define([], function () {
                 if (params.startDate == undefined) {
                     res.send({error: "provide a start Date"})
                 } else if (params.endDate == undefined) {
-                    var start = new Date(params.startDate).setHours(0, 0, 0,0) ;
-                    var end = new Date(params.startDate).setHours(23, 59, 59, 999);
+                    var start = new Date(params.startDate.replace('"','').replace('"','')).setHours(0, 0, 0,0) ;
+                    var end = new Date(params.startDate.replace('"','').replace('"','')).setHours(23, 59, 59, 999);
                 }else{
-                    end = new Date(params.endDate).setHours(23,59,59,999);
+                    start = new Date(params.startDate.replace('"','').replace('"','')).setHours(0, 0, 0,0);
+                    end = new Date(params.endDate.replace('"','').replace('"','')).setHours(23,59,59,999);
                 }
                 query['startDate'] = {"$gt": new Date(start),"$lt":new Date(end)};
 
@@ -35,7 +36,7 @@ define([], function () {
                 }
 
 
-                db.collection('articles').find(query).limit(numberPerPage).skip(skip).toArray(function (err, docs) {
+                db.collection('articles').find(query).limit(numberPerPage).skip(skip).sort('startDate').toArray(function (err, docs) {
                     if(err)throw err;
                     res.send(docs);
                 });

@@ -1,6 +1,6 @@
 define(['node-geocoder'], function (geocoder) {
 
-    var setters = {
+    var model = {
 
         setPlace: function (article, next) {
             var addr;
@@ -129,30 +129,58 @@ define(['node-geocoder'], function (geocoder) {
             return null;
         },
 
+        setTitle: function (feedArticle, id) {
+            if (id === undefined) id = this.id;
+            if (id === 'stubhub') {
+                return feedArticle.description;
+            }
+        },
+
+        setDesc: function(feedArticle,id){
+            if (id === undefined) id = this.id;
+            if (id === 'stubhub') {
+                return feedArticle.title;
+            }
+        },
+
+        setId:function(feedArticle,id){
+            if (id === undefined) id = this.id;
+            if (id === 'stubhub') {
+                return feedArticle.event_id;
+            }
+        },
+
         setAll: function (feedArticle, feedParams, next) {
 
             this.id = feedParams.id;
-            setters.setPlace(feedArticle, function (addr) {
+            model.setPlace(feedArticle, function (addr) {
                 var article = {
-                    title: feedArticle.title,
-                    categories: setters.setCategory(feedArticle),
-                    url: setters.setUrl(feedArticle),
+                    title: model.setTitle(feedArticle),
+                    categories: model.setCategory(feedArticle),
+                    url: model.setUrl(feedArticle),
                     place: addr,
-                    startDate: setters.setStartDate(feedArticle),
-                    endDate: setters.setEndDate(feedArticle),
-                    description: feedArticle.description,
-                    organizer: setters.setOrganizer(feedArticle),
-                    minPrice: setters.setMinPrice(feedArticle),
-                    maxPrice: setters.setMaxPrice(feedArticle)
+                    startDate: model.setStartDate(feedArticle),
+                    endDate: model.setEndDate(feedArticle),
+                    description: model.setDesc(feedArticle),
+                    organizer: model.setOrganizer(feedArticle),
+                    minPrice: model.setMinPrice(feedArticle),
+                    maxPrice: model.setMaxPrice(feedArticle),
+                    eventId:model.setId(feedArticle)
                 };
                 article.removeNulls();
                 next(article);
+            });
+        },
+
+        getLastId: function (website, next) {
+            db.collection('articles2').findOne({website: website}, {sort: {$natural: -1}}, function (err, doc) {
+                next(doc)
             });
         }
     };
 
 
-    return setters;
+    return model;
 })
 ;
 

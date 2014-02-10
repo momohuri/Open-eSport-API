@@ -1,6 +1,7 @@
 define(['feedparser', 'request', './constructArticle', 'http'], function (FeedParser, request, constructArticle, http) {
 
     function Feed(url) {
+        errorNum = 0;
         this.website = url.name;
         this.websiteShort = url.websiteShort;
         this.url = url.url;
@@ -57,15 +58,12 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
                         body += data;
                     });
                     res.on('end', function () {
-                        debugger
                         console.log(data);
                         body = JSON.parse(body).events;
                         if (body.length === 101) {
                             console.log('doitagain with since = ' + body[101].event.id);
                         }
                         for (var i = 1; i < body.length; i++) {
-                            debugger
-                            //todo work from here
                             eachArticle(body[i].event);
                         }
                     });
@@ -96,8 +94,8 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
     };
 
     Feed.prototype.verifyIfExist = function (feedArticle, next) {
-        var url = constructArticle.setUrl(feedArticle, this.id);
-        dbCheck.collection('articles2').findOne({url: url }, function (err, doc) {
+        var id = constructArticle.setId(feedArticle, this.id);
+        dbCheck.collection('articles2').findOne({eventId: id }, function (err, doc) {
             if (err) throw err;
             next(doc !== null);
         });
@@ -107,24 +105,21 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
         var toInsert = article;
         toInsert.language = this.language;
         toInsert.website = this.website;
-        dbCheck.collection('articles2').insert({url: article.url}, function (error, numberRowModified) {
+
+        dbCheck.collection('articles2').insert({eventId: article.eventId, insertDate: new Date()}, function (error, numberRowModified) {
             if (error) {
                 console.log("FAILED " + toInsert.website);
                 console.log("ERROR: " + error);
+            } else {
+                db.collection('articles').insert(toInsert, function (error, numberRowModified) {
+                    if (error) {
+                        console.log("FAILED " + toInsert.website);
+                        console.log("ERROR: " + error);
+                        console.log("ERROR: " + ++errorNum);
+                    }
+                });
             }
         });
-
-        db.collection('articles').insert(toInsert, function (error, numberRowModified) {
-                if (error) {
-                    console.log("FAILED " + toInsert.website);
-                    console.log("ERROR: " + error);
-                }
-                else {
-                    //to slow
-//                     console.log("new article from " + toInsert.website + ": " + toInsert.title);
-                }
-            }
-        );
     };
 
     return Feed;
