@@ -12,7 +12,9 @@ define([], function () {
 
                 var query = {};
 
-                if (params.categories != undefined) query.categories = params.categories;
+                if (params.categories != undefined) {
+                    typeof params.categories === "string" ? query.categories = params.categories : query.categories = {$in: params.categories}
+                }
                 if (params.minPrice != undefined) {
                     query['maxPrice'] = {$gte: Number(params.minPrice)}
                 }
@@ -22,13 +24,13 @@ define([], function () {
                 if (params.startDate == undefined) {
                     res.send({error: "provide a start Date"})
                 } else if (params.endDate == undefined) {
-                    var start = new Date(params.startDate.replace('"','').replace('"','')).setHours(0, 0, 0,0) ;
-                    var end = new Date(params.startDate.replace('"','').replace('"','')).setHours(23, 59, 59, 999);
-                }else{
-                    start = new Date(params.startDate.replace('"','').replace('"','')).setHours(0, 0, 0,0);
-                    end = new Date(params.endDate.replace('"','').replace('"','')).setHours(23,59,59,999);
+                    var start = new Date(params.startDate.replace('"', '').replace('"', '')).setHours(0, 0, 0, 0);
+                    var end = new Date(params.startDate.replace('"', '').replace('"', '')).setHours(23, 59, 59, 999);
+                } else {
+                    start = new Date(params.startDate.replace('"', '').replace('"', '')).setHours(0, 0, 0, 0);
+                    end = new Date(params.endDate.replace('"', '').replace('"', '')).setHours(23, 59, 59, 999);
                 }
-                query['startDate'] = {"$gt": new Date(start),"$lt":new Date(end)};
+                query['startDate'] = {"$gt": new Date(start), "$lt": new Date(end)};
 
 
                 if (params.latitude != undefined && params.longitude) {
@@ -37,7 +39,8 @@ define([], function () {
 
 
                 db.collection('articles').find(query).limit(numberPerPage).skip(skip).sort('startDate').toArray(function (err, docs) {
-                    if(err)throw err;
+                    if (err)throw err;
+                    console.log(query)
                     res.send(docs);
                 });
 
