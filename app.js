@@ -7,7 +7,7 @@ requirejs.config({
 
 requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, mongo, fs) {
 
-
+    categories = JSON.parse(fs.readFileSync('./resources/categories.json', 'utf8'));
     var conf = JSON.parse(fs.readFileSync('./conf/' + process.env.NODE_ENV + '.json', 'utf8')); //on le lit en sync car ca sera jamais bloquant
     mongo.connect(conf.mongoEvents, { server: {options: { auto_reconnect: true }} }, function (err, database2) {
         if (err) throw err;

@@ -60,6 +60,7 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
                     });
                     res.on('end', function () {
                         body = JSON.parse(body).events;
+                        if (body === undefined) return;
                         if (body.length === 101) {
                             get(++page)
                         }
@@ -72,6 +73,7 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
                     console.log("Got error: " + e.message);
                 });
             }
+
                 get(page);
 
                 break;

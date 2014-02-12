@@ -181,7 +181,7 @@ define(['node-geocoder'], function (geocoder) {
                     price: model.setPrice(feedArticle),
                     eventId: model.setId(feedArticle)
                 };
-                article.removeNulls();
+                removeNulls(article);
                 next(article);
             });
         }
@@ -194,11 +194,11 @@ define(['node-geocoder'], function (geocoder) {
 
 
 //I don't want to insert null fields in mongo
-Object.prototype.removeNulls = function () {
-    var obj = this;
+var removeNulls = function (object) {
+    var obj = object;
     var isArray = obj instanceof Array;
     for (var k in obj) {
         if (obj[k] === null || obj[k] === undefined) isArray ? obj.splice(k, 1) : delete obj[k];
-        else if (typeof obj[k] == "object") obj[k].removeNulls();
+        else if (typeof obj[k] == "object") removeNulls(obj[k]);
     }
 };

@@ -13,7 +13,14 @@ define([], function () {
                 var query = {};
 
                 if (params.categories != undefined) {
-                    typeof params.categories === "string" ? query.categories = params.categories : query.categories = {$in: params.categories}
+                    if (typeof params.categories === "string") {
+                        query.categories = categories[params.categories];
+                    } else {
+                        query.categories = {$in: []};
+                        params.categories.forEach(function (category) {
+                            query.categories.$in = query.categories.$in.concat(categories[category]);
+                        });
+                    }
                 }
                 if (params.minPrice != undefined) {
                     query['maxPrice'] = {$gte: Number(params.minPrice)}
@@ -37,11 +44,23 @@ define([], function () {
                     query['place.geo'] = { $near: {$geometry: {coordinates: [Number(params.longitude), Number(params.latitude)], type: 'Point'}, $maxDistance: params.distance }};
                 }
 
-
                 db.collection('articles').find(query).limit(numberPerPage).skip(skip).sort('startDate').toArray(function (err, docs) {
                     if (err)throw err;
+                    docs.forEach(function (doc) {
+                        doc.category = setCategory(doc);
+                    });
                     res.send(docs);
                 });
+
+                function setCategory(doc) {
+                    for (var key in categories) {
+                        for(var i = 0;i<doc.categories.length;i++){
+                           if(categories[key].indexOf(doc.categories[i]) !== -1){
+                               return key;
+                           }
+                        }
+                    }
+                }
 
 
                 //full text search if needed
