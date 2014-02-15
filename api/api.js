@@ -14,7 +14,7 @@ define([], function () {
 
                 if (params.categories != undefined) {
                     if (typeof params.categories === "string") {
-                        query.categories = categories[params.categories];
+                        query.categories = {$in: categories[params.categories]};
                     } else {
                         query.categories = {$in: []};
                         params.categories.forEach(function (category) {
@@ -53,11 +53,27 @@ define([], function () {
                 });
 
                 function setCategory(doc) {
-                    for (var key in categories) {
-                        for(var i = 0;i<doc.categories.length;i++){
-                           if(categories[key].indexOf(doc.categories[i]) !== -1){
-                               return key;
-                           }
+                    if (typeof params.categories === 'object') {  //if we have a category we just take from it
+                        for (var y = 0; y < params.categories.length; y++) {
+                            for (var i = 0; i < doc.categories.length; i++) {
+                                if (categories[params.categories[y]].indexOf(doc.categories[i]) !== -1) {
+                                    return params.categories[y];
+                                }
+                            }
+                        }
+                    } else if (typeof params.categories === 'string') {
+                            for (var i = 0; i < doc.categories.length; i++) {
+                                if (categories[params.categories].indexOf(doc.categories[i]) !== -1 ) {
+                                    return params.categories;
+                                }
+                            }
+                    } else {
+                        for (var key in categories) {
+                            for (var i = 0; i < doc.categories.length; i++) {
+                                if (categories[key].indexOf(doc.categories[i]) !== -1) {
+                                    return key;
+                                }
+                            }
                         }
                     }
                 }
@@ -71,11 +87,6 @@ define([], function () {
 //                    }));
 //                });
 
-                function capitalizeFirstLetter(str) {
-                    return str.replace(/\w\S*/g, function (txt) {
-                        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-                    });
-                }
             },
 
             categories: function (req, res) {
