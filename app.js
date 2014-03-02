@@ -48,3 +48,8 @@ requirejs(['api/init', 'parser/init', 'mongodb', 'fs' ], function (api, parser, 
     }
 })
 ;
+// do not use this in modules, but only in applications, as otherwise we could have multiple of these bound
+process.on('uncaughtException', function(err) {
+    // handle the error safely
+    console.log(err);
+});

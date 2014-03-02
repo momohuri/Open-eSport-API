@@ -54,7 +54,7 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
 
             function get(page) {
                 var body = '';
-                http.get("http://www.eventbrite.com/json/event_search?app_key=C2IDOBMECGZZUQKLJQ&max=100&page=" + page,function (res) {
+                http.get(this.url+ page,function (res) {
                     res.on('data', function (data) {
                         body += data;
                     });

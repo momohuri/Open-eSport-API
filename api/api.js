@@ -5,7 +5,7 @@ define([], function () {
 
             find: function (req, res) {
                 var params = req.query;
-                if (params.distance == undefined) params.distance = 15000;
+                if (params.distance == undefined) params.distance = 150000;
                 if (params.page == undefined) params.page = 0;
                 var numberPerPage = 30;
                 var skip = params.page * numberPerPage;

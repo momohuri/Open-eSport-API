@@ -85,7 +85,7 @@ define(['node-geocoder'], function (geocoder) {
         setUrl: function (feedArticle, id) {
             if (id === undefined) id = this.id;
             if (id === 'stubhub') {
-                return  'http://stubhub.com/' + feedArticle.genreUrlPath + '/' + feedArticle.urlpath;
+                return  'http://stubhub.com/' + feedArticle.genreUrlPath + '/' + feedArticle.urlpath + '/';
             } else if (id === 'eventbrite') {
                 return feedArticle.url;
             }
@@ -113,7 +113,7 @@ define(['node-geocoder'], function (geocoder) {
         setOrganizer: function (feedArticle, id) {
             if (id === undefined) id = this.id;
             if (id === 'eventbrite') {
-                if(feedArticle.organizer == undefined) return null;
+                if (feedArticle.organizer == undefined) return null;
                 return feedArticle.organizer.name;
             }
             return null;
@@ -165,6 +165,16 @@ define(['node-geocoder'], function (geocoder) {
             }
         },
 
+        setImage: function (feedArticle, id) {
+            if (id === undefined) id = this.id;
+            if (id === 'stubhub') {
+                //return  'http://stubhub.com/data/venue_maps/' + feedArticle.geography_parent + '/' + feedArticle.image_url;
+                return null;
+            } else if (id === 'eventbrite') {
+                return feedArticle.logo;
+            }
+        },
+
         setAll: function (feedArticle, feedParams, next) {
             this.id = feedParams.id;
             model.setPlace(feedArticle, function (addr) {
@@ -179,14 +189,14 @@ define(['node-geocoder'], function (geocoder) {
                     description: model.setDesc(feedArticle),
                     organizer: model.setOrganizer(feedArticle),
                     price: model.setPrice(feedArticle),
-                    eventId: model.setId(feedArticle)
+                    eventId: model.setId(feedArticle),
+                    imageUrl: model.setImage(feedArticle)
                 };
                 removeNulls(article);
                 next(article);
             });
         }
     };
-
 
     return model;
 })
