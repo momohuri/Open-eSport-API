@@ -92,7 +92,7 @@ define(['node-geocoder'], function (geocoder) {
             return null;
         },
 
-        setStartDate: function (feedArticle, id) {
+        setstart: function (feedArticle, id) {
             if (id === undefined) id = this.id;
             if (id === 'stubhub') {
                 return new Date(feedArticle.event_date);
@@ -102,7 +102,7 @@ define(['node-geocoder'], function (geocoder) {
             return null;
         },
 
-        setEndDate: function (feedArticle, id) {
+        setend: function (feedArticle, id) {
             if (id === undefined) id = this.id;
             if (id === 'eventbrite') {
                 return new Date(feedArticle.end_date);
@@ -184,8 +184,8 @@ define(['node-geocoder'], function (geocoder) {
                     categories: model.setCategory(feedArticle),
                     url: model.setUrl(feedArticle),
                     place: addr,
-                    startDate: model.setStartDate(feedArticle),
-                    endDate: model.setEndDate(feedArticle),
+                    start: model.setstart(feedArticle),
+                    end: model.setend(feedArticle),
                     description: model.setDesc(feedArticle),
                     organizer: model.setOrganizer(feedArticle),
                     price: model.setPrice(feedArticle),

@@ -28,23 +28,23 @@ define([], function () {
                 if (params.maxPrice != undefined) {
                     query['minPrice'] = {$lte: Number(params.maxPrice)}
                 }
-                if (params.startDate == undefined) {
+                if (params.start == undefined) {
                     res.send({error: "provide a start Date"})
                 } else if (params.endDate == undefined) {
-                    var start = new Date(params.startDate.replace('"', '').replace('"', '')).setHours(0, 0, 0, 0);
-                    var end = new Date(params.startDate.replace('"', '').replace('"', '')).setHours(23, 59, 59, 999);
+                    var start = new Date(params.start.replace('"', '').replace('"', '')).setHours(0, 0, 0, 0);
+                    var end = new Date(params.start.replace('"', '').replace('"', '')).setHours(23, 59, 59, 999);
                 } else {
-                    start = new Date(params.startDate.replace('"', '').replace('"', '')).setHours(0, 0, 0, 0);
+                    start = new Date(params.start.replace('"', '').replace('"', '')).setHours(0, 0, 0, 0);
                     end = new Date(params.endDate.replace('"', '').replace('"', '')).setHours(23, 59, 59, 999);
                 }
-                query['startDate'] = {"$gt": new Date(start), "$lt": new Date(end)};
+                query['start'] = {"$gt": new Date(start), "$lt": new Date(end)};
 
 
                 if (params.latitude != undefined && params.longitude) {
                     query['place.geo'] = { $near: {$geometry: {coordinates: [Number(params.longitude), Number(params.latitude)], type: 'Point'}, $maxDistance: params.distance }};
                 }
 
-                db.collection('articles').find(query).limit(numberPerPage).skip(skip).sort('startDate').toArray(function (err, docs) {
+                db.collection('articles').find(query).limit(numberPerPage).skip(skip).sort('start').toArray(function (err, docs) {
                     if (err)throw err;
                     docs.forEach(function (doc) {
                         doc.category = setCategory(doc);
