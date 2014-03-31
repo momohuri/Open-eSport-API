@@ -88,7 +88,7 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
             if (self.id === "eventbrite" && article.status != "Live") {
                 return;
             }
-            var date = constructArticle.setStartDate(article, self.id);
+            var date = constructArticle.setStart(article, self.id);
             if (article !== undefined && new Date(date) > new Date()) {
                 self.verifyIfExist(article, function (exist) {
                     if (!exist) {
