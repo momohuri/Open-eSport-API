@@ -18,7 +18,7 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
             case 'stubhub':
                 var buffer = '';
                 var first = true;
-                http.get(this.url,function (res) {
+                http.get(this.url, function (res) {
                     console.log("Got response: " + res.statusCode);
                     res.setEncoding('utf8');
                     res.on('data', function (data) {
@@ -45,7 +45,7 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
 
                     })
                 }).on('error', function (e) {
-                    console.log("Got error: " + e.message);
+                    console.log("Got error: " + e.message + ', for stubhub');
                 });
 
                 break;
@@ -54,7 +54,7 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
 
             function get(page) {
                 var body = '';
-                http.get(this.url+ page,function (res) {
+                http.get(self.url + page, function (res) {
                     res.on('data', function (data) {
                         body += data;
                     });
@@ -70,7 +70,7 @@ define(['feedparser', 'request', './constructArticle', 'http'], function (FeedPa
                     });
 
                 }).on('error', function (e) {
-                    console.log("Got error: " + e.message);
+                    console.log("Got error: " + e.message + ', for eventbride');
                 });
             }
 
